@@ -13,13 +13,15 @@ function Navbar( { show } ) {
   ]
 
   return (
-    <ul className="transition ease-in-out delay-150 bg-zinc-800 p-4 rounded-lg w-1/4 h-full">
+    <ul 
+      className={ show ? 'transition-all duration-1000 bg-zinc-800 p-4 rounded-lg w-1/4 h-full mr-5'
+                       : 'transition-all duration-1000 bg-zinc-800 px-0 py-4 rounded-lg w-0 h-full overflow-hidden'}>
       {navOptions.map((option) => (
-        <li key={option.name} className="">
+        <li key={option.name} className="overflow-hidden">
           <Link 
             to={option.href} 
-            className="flex items-center gap-2 w-full p-2 rounded-lg 
-                      hover:bg-zinc-700 duration-300 hover: cursor-pointer"
+            className="flex items-center gap-2 min-w-fit w-full h-10 p-2 rounded-lg hover:bg-zinc-700 
+                       duration-300 hover: cursor-pointer text-nowrap"
           >
             <IconContext.Provider value={ { size: 20 } }>
               {option.logo}
