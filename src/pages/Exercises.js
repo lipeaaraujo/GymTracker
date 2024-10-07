@@ -10,9 +10,7 @@ function Exercises() {
 
   return (
     <>
-      <ExerciseModal open={exerciseModal} onClose={() => setExerciseModal(false)}>
-        <div className="bg-zinc-800 w-1/5 h-1/3 rounded-xl"></div>
-      </ExerciseModal>
+      <ExerciseModal open={exerciseModal} onClose={() => setExerciseModal(false)} />
 
       <div className="flex gap-4 flex-wrap">
         <IconContext.Provider value={ { size: 40 } }>
