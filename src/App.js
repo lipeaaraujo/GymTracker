@@ -4,6 +4,7 @@ import NoPage from './pages/NoPage';
 import Navbar from './components/Navbar';
 import Header from './components/Header';
 import { useState } from 'react';
+import ViewExercise from './pages/ViewExercise';
 
 function App() {
 
@@ -23,7 +24,7 @@ function App() {
         <div className='p-4 bg-zinc-800 rounded-lg w-full h-full'>
           <Routes>
             <Route index element={<Exercises />} />
-            <Route path="/exercises" element={<Exercises />} />
+            <Route path="/viewexercise" element={<ViewExercise />} />
             <Route path="*" element={<NoPage />} />
           </Routes>
         </div>

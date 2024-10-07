@@ -9,7 +9,7 @@ function Navbar( { show } ) {
   let location = useLocation()
 
   const navOptions = [
-    { name: "Exercises", href: "/exercises", logo: <CgGym /> },
+    { name: "Exercises", href: "/", logo: <CgGym /> },
     { name: "Routines", href: "/routines", logo: <CiCalendar /> },
     { name: "Personal Health", href: "/health", logo: <BiHealth /> },
   ]
