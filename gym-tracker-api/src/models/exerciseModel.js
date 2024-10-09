@@ -8,7 +8,7 @@ const ExerciseSchema = new mongoose.Schema({
   description: {
     type: String
   },
-  sessions: [SessionSchema]
+  sessions: [{ type:mongoose.Schema.Types.ObjectId, ref: "Session" }]
 })
 
 module.exports = mongoose.model('Exercise', ExerciseSchema);

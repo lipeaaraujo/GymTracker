@@ -1,9 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("dotenv").config()
+
+const Set = require("./models/setModel");
+const Session = require("./models/sessionModel");
+const Exercise = require("./models/exerciseModel");
 
 const app = express();
 app.use(express.json())
-const port = 3001;
+const port = process.env.PORT || 4000;
 
 // API operations
 app.get("/exercise", async (req, res) => {
@@ -39,6 +44,6 @@ app.delete("/exercise/:id", async (req, res) => {
 })
 
 app.listen(port, async () => {
-  await mongoose.connect("");
-  console.log("app running");
+  await mongoose.connect(process.env.DATABASE_URL);
+  console.log(`application running on port ${port}`);
 })

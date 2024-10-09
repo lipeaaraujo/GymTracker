@@ -9,7 +9,7 @@ const SessionSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  sets: [SetSchema],
+  sets: [{ type:mongoose.Schema.Types.ObjectId, ref: "Set" }],
 })
 
 module.exports = mongoose.model('Session', SessionSchema);
