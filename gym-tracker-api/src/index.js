@@ -8,9 +8,13 @@ app.use(express.json())
 const port = process.env.PORT || 4000;
 
 // router imports
-const exerciseRoutes = require("./routes/exercises")
+const exerciseRoutes = require("./routes/exercises");
+const sessionRoutes = require("./routes/sessions");
+const setRoutes = require("./routes/sets");
 
 app.use("/exercise", exerciseRoutes);
+app.use("/session", sessionRoutes);
+app.use("/set", setRoutes);
 
 app.listen(port, async () => {
   try {

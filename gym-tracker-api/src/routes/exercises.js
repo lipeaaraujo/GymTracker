@@ -75,4 +75,17 @@ router.delete("/:id", async (req, res) => {
   }
 })
 
+// get a existing exercise by id and all it's sessions
+router.get("/:id", async (req, res) => {
+  try {
+    const exercise = Exercise.findById(req.params.id).populate("sessions");
+    if (exercise == null) {
+      return res.status(404).json({ message: 'Cannot find exercise' });
+    }
+    return res.status(200).json(exercise);
+  } catch (err) {
+    return res.status(500).json({ message: err.message })
+  }
+})
+
 module.exports = router;
