@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // model import
-const Exercise = require("../models/exerciseModel")
+const Exercise = require("../models/exerciseModel");
+const Session = require("../models/sessionModel");
 
 // exercises routes
 
@@ -24,6 +25,23 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ message: 'Cannot find exercise' });
     }
     return res.status(200).json(exercise)
+  } catch (err) {
+    return res.status(500).json({ message: err.message })
+  }
+})
+
+// get a existing exercise by id and all it's sessions
+router.get("/:id/sessions", async (req, res) => {
+  try {
+    const sessions = await Session.find({ exercise: req.params.id });
+
+    const exercise = await Exercise.findById(req.params.id);
+    if (exercise == null) {
+      return res.status(404).json({ message: 'Cannot find exercise' });
+    }
+
+    exercise.sessions = sessions;
+    return res.status(200).json(exercise);
   } catch (err) {
     return res.status(500).json({ message: err.message })
   }
@@ -69,20 +87,9 @@ router.delete("/:id", async (req, res) => {
     if (exercise == null) {
       return res.status(404).json({ message: 'Cannot find exercise' });
     }
-    return res.status(200).json(exercise);      
-  } catch (err) {
-    return res.status(500).json({ message: err.message })
-  }
-})
+    // await Session.deleteMany({ exercise: exercise._id }, );
 
-// get a existing exercise by id and all it's sessions
-router.get("/:id", async (req, res) => {
-  try {
-    const exercise = Exercise.findById(req.params.id).populate("sessions");
-    if (exercise == null) {
-      return res.status(404).json({ message: 'Cannot find exercise' });
-    }
-    return res.status(200).json(exercise);
+    return res.status(200).json(exercise);      
   } catch (err) {
     return res.status(500).json({ message: err.message })
   }

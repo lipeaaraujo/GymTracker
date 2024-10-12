@@ -9,7 +9,7 @@ const Set = require("../models/setModel");
 // get all existing sets
 router.get("/", async (req, res) => {
   try {
-    const sets = Set.find();
+    const sets = await Set.find();
     return res.status(200).json(sets);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 // get a existing set by id
 router.get("/:id", async (req, res) => {
   try {
-    const set = Set.findById(req.params.id);
+    const set = await Set.findById(req.params.id);
     if (set == null) {
       return res.status(404).json({ message: 'Cannot find set' });
     }
@@ -47,7 +47,7 @@ router.post("/", async (req, res) => {
 // update a existing set
 router.put("/:id", async (req, res) => {
   try {
-    const set = Set.findByIdAndUpdate(req.params.id, {
+    const set = await Set.findByIdAndUpdate(req.params.id, {
       session: req.body.session,
       numReps: req.body.numReps,
       weight: req.body.weight,
@@ -66,7 +66,7 @@ router.put("/:id", async (req, res) => {
 // delete a existing set
 router.delete("/:id", async (req, res) => {
   try {
-    const set = Set.findByIdAndDelete(req.params.id);
+    const set = await Set.findByIdAndDelete(req.params.id);
     if (set == null) {
       return res.status(404).json({ message: 'Cannot find set' });
     }
