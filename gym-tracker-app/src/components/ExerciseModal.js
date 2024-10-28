@@ -4,7 +4,7 @@ import Modal from "./Modal";
 
 function ExerciseModal({ open, onClose }) {
 
-  const [name, setName] = useState("")
+  const [name, setName] = useState("");
 
   return (
     <Modal open={ open } onClose={ onClose } title={ "New Exercise" }>

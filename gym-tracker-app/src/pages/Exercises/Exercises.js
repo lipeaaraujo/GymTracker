@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { CgGym } from "react-icons/cg";
 import { FaPlus } from "react-icons/fa";
-import ExerciseModal from "../components/ExerciseModal";
-import ExerciseBox from "../components/ExerciseBox";
+import ExerciseModal from "../../components/ExerciseModal";
+import ExerciseBox from "../../components/ExerciseBox";
 
 function Exercises() {
 
