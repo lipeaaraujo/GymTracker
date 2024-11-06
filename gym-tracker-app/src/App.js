@@ -11,7 +11,7 @@ import Register from './pages/Register';
 function App() {
 
   const [showNavbar, setShowNavbar] = useState(true);
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
