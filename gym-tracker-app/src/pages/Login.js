@@ -8,7 +8,7 @@ function Login() {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="p-4 bg-zinc-800 rounded-lg">
+      <div className="w-1/4 p-4 bg-zinc-800 rounded-lg">
         <h2>Login</h2>
         <form className="flex flex-col py-4">
           <label className="flex flex-col">
@@ -27,7 +27,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-          <Link to="/register" className="self-end">Create Account</Link>
+          <Link to="/register" className="self-end underline">Create Account</Link>
           <button className="w-full p-2 mt-4 bg-zinc-700 rounded-xl
                           hover:bg-zinc-600">
             Confirm

@@ -1,11 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { FaCheck, FaTimes, FaInfoCircle } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const EMAIL_REGEX = /^[\w+.]+@\w+\.\w{2,}(?:\.\w{2})?$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
+const REGISTER_URL = '/register';
+
 function Register() {
+  const navigate = useNavigate();
   const userRef = useRef();
   const errRef = useRef();
 
@@ -31,7 +36,6 @@ function Register() {
 
   // response useStates
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
   // hooks
   useEffect(() => {
@@ -49,19 +53,51 @@ function Register() {
     setValidPwd(result);
     const match = password === matchPwd;
     setValidMatch(match);
-    console.log(password, matchPwd)
   }, [password, matchPwd])
 
   useEffect(() => {
     setErrMsg("");
   }, [name, password, email, matchPwd])
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const nameMatch = NAME_REGEX.test(name);
+    const pwdMatch = PWD_REGEX.test(password);
+    
+    if (!nameMatch || !pwdMatch) {
+      setErrMsg('Invalid Entry');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        REGISTER_URL,
+        JSON.stringify({ name, email, password }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      )
+      console.log(JSON.stringify(response));
+      navigate("/login");
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg('No Serve Response');
+      } else if (err.response?.status === 409) {
+        setErrMsg('Email already has a account registered');
+      } else {
+        setErrMsg('Registration Failed');
+      }
+      errRef.current?.focus();
+    }
+  }
+
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="w-1/5 p-4 bg-zinc-800 rounded-lg duration-300">
+      <div className="w-1/4 p-4 bg-zinc-800 rounded-lg duration-300">
         <h2>Register</h2>
-        <p className={errMsg ? "" : "hidden"} aria-live="assertive">{errMsg}</p>
-        <form className="flex flex-col py-4 gap-1">
+        <p className={errMsg ? "bg-red-800 p-1 rounded-lg" : "hidden"} aria-live="assertive">{errMsg}</p>
+        <form className="flex flex-col py-4 gap-1" onSubmit={handleSubmit}>
           <label htmlFor="username" className="flex justify-between">
             Name:
             <span className={validName ? "text-green-600" : "hidden"}>
@@ -82,7 +118,7 @@ function Register() {
             onFocus={() => setNameFocus(true)}
             onBlur={() => setNameFocus(false)}
           />
-          <p id="namenote" className={nameFocus && name && !validName ? "bg-zinc-900 rounded-lg p-1 " : "hidden"}>
+          <p id="namenote" className={nameFocus && name && !validName ? "bg-zinc-900 rounded-lg p-1 text-sm" : "hidden"}>
             <FaInfoCircle />
             4 to 24 characters. <br />
             Must begin with a letter. <br />
@@ -107,7 +143,7 @@ function Register() {
             onFocus={() => setEmailFocus(true)}
             onBlur={() => setEmailFocus(false)}
           />
-          <p id="emailnote" className={emailFocus && email && !validEmail ? "bg-zinc-900 rounded-lg p-1 " : "hidden"}>
+          <p id="emailnote" className={emailFocus && email && !validEmail ? "bg-zinc-900 rounded-lg p-1 text-sm" : "hidden"}>
             <FaInfoCircle />
             Email must be valid.
           </p>
@@ -129,7 +165,7 @@ function Register() {
             onFocus={() => setPwdFocus(true)}
             onBlur={() => setPwdFocus(false)}
           />
-          <p id="pwdnote" className={pwdFocus && password && !validPwd ? "bg-zinc-900 rounded-lg p-1 " : "hidden"}>
+          <p id="pwdnote" className={pwdFocus && password && !validPwd ? "bg-zinc-900 rounded-lg p-1 text-sm" : "hidden"}>
             <FaInfoCircle />
             8 to 24 characters. <br />
             Must include uppercase and lowercase letters, a number and a special character
@@ -155,7 +191,7 @@ function Register() {
             onFocus={() => setMatchFocus(true)}
             onBlur={() => setMatchFocus(false)}
           />
-          <p id="matchnote" className={matchFocus && matchPwd && !validMatch ? "bg-zinc-900 rounded-lg p-1 " : "hidden"}>
+          <p id="matchnote" className={matchFocus && matchPwd && !validMatch ? "bg-zinc-900 rounded-lg p-1 text-sm" : "hidden"}>
             <FaInfoCircle />
             Must match the new password.
           </p>
@@ -166,6 +202,12 @@ function Register() {
             Confirm
           </button>
         </form>
+        <p>
+          Already registered?<br />
+          <span className="underline">
+            <Link to="/login">Sign In</Link>
+          </span>
+        </p>
       </div>
     </div>
   )
