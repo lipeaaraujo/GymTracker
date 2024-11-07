@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const cookieParser = require("cookie-parser")
 const verifyAuth = require("./middlewares/verifyAuth");
+const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const credentials = require("./middlewares/credentials");
 
