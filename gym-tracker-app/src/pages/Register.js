@@ -82,7 +82,7 @@ function Register() {
       navigate("/login");
     } catch (err) {
       if (!err?.response) {
-        setErrMsg('No Serve Response');
+        setErrMsg('No Server Response');
       } else if (err.response?.status === 409) {
         setErrMsg('Email already has a account registered');
       } else {

@@ -45,11 +45,11 @@ router.post("/login", async (req, res) => {
     // verify if user exists
     const user = await User.findOne({ email: email });
     if (user == null) {
-      return res.status(404).json({ message: 'Incorrect email or password' });
+      return res.status(401).json({ message: 'Incorrect email or password' });
     }
 
     // validate password
-    const matchPassword = Encrypt.comparePassword(password, user.password);
+    const matchPassword = await Encrypt.comparePassword(password, user.password);
     if (!matchPassword) {
       return res.status(401).json({ message: 'Incorrect email or password' });
     }
