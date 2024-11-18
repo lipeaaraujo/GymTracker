@@ -1,12 +1,16 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-import AuthContext from "../context/AuthProvider";
+import useAuth from "../hooks/useAuth";
 
 const LOGIN_URL = "/login";
 
 function Login() {
-  const { setAuth } = useContext(AuthContext); 
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";  
 
   const userRef = useRef();
   const errRef = useRef();
@@ -46,6 +50,7 @@ function Login() {
       setAuth({ email, password, accessToken });
       setEmail("");
       setPassword("");
+      navigate(from, { replace: true })
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -59,44 +64,42 @@ function Login() {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="w-1/4 p-4 bg-zinc-800 rounded-lg">
-        <h2>Login</h2>
-        <p className={errMsg ? "bg-red-800 p-1 rounded-lg" : "hidden"} aria-live="assertive">{errMsg}</p>
-        <form className="flex flex-col py-4 gap-1" onSubmit={handleSubmit}>
-          <label htmlFor="email" className="flex flex-col">
-            Email:
-          </label>
-          <input
-            type="text"
-            id="email"
-            autoComplete="off"
-            ref={userRef}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <label htmlFor="password" className="flex flex-col">
-            Password:
-          </label>
-          <input
-            type="password"
-            id="password"
-            ref={userRef}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <Link to="/register" className="self-end underline">
-            Create Account
-          </Link>
-          <button
-            disabled={!formValid}
-            className="w-full mt-4">
-            Confirm
-          </button>
-        </form>
-      </div>
+    <div className="w-1/4 p-4 bg-zinc-800 rounded-lg">
+      <h2>Login</h2>
+      <p className={errMsg ? "bg-red-800 p-1 rounded-lg" : "hidden"} aria-live="assertive">{errMsg}</p>
+      <form className="flex flex-col py-4 gap-1" onSubmit={handleSubmit}>
+        <label htmlFor="email" className="flex flex-col">
+          Email:
+        </label>
+        <input
+          type="text"
+          id="email"
+          autoComplete="off"
+          ref={userRef}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <label htmlFor="password" className="flex flex-col">
+          Password:
+        </label>
+        <input
+          type="password"
+          id="password"
+          ref={userRef}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <Link to="/register" className="self-end underline">
+          Create Account
+        </Link>
+        <button
+          disabled={!formValid}
+          className="w-full mt-4">
+          Confirm
+        </button>
+      </form>
     </div>
   )
 }
