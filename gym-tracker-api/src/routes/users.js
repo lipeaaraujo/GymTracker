@@ -7,12 +7,16 @@ const registerController = require("../controllers/registerController");
 
 // user routes
 
-router.post("/register", registerController.handleRegister);
+router.route("/register")
+  .post(registerController.handleRegister)
 
-router.post("/login", authController.handleLogin);
+router.route("/login")
+  .post(authController.handleLogin)
 
-router.get("/refresh", refreshTokenController.handleRefreshToken);
+router.route("/refresh")
+  .get(refreshTokenController.handleRefreshToken);
 
-router.get("/logout", logoutController.handleLogout);
+router.route("/logout")
+  .get(logoutController.handleLogout)
 
 module.exports = router;

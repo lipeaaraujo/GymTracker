@@ -4,16 +4,16 @@ const exerciseController = require("../controllers/exerciseController");
 
 // exercises routes
 
-router.get("/", exerciseController.getAllExercises);
+router.route("/")
+  .get(exerciseController.getAllExercises)
+  .post(exerciseController.handleCreateExercise)
 
-router.get("/:id", exerciseController.getExerciseById);
+router.route("/:id")
+  .get(exerciseController.getExerciseById)
+  .put(exerciseController.handleEditExercise)
+  .delete(exerciseController.handleDeleteExercise)
 
-router.get("/:id/sessions", exerciseController.getExerciseAndSessions);
-
-router.post("/", exerciseController.handleCreateExercise);
-
-router.put("/:id", exerciseController.handleEditExercise);
-
-router.delete("/:id", exerciseController.handleDeleteExercise);
+router.route("/:id/sessions")
+  .get(exerciseController.getExerciseAndSessions)
 
 module.exports = router;

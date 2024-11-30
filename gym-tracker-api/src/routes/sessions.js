@@ -4,18 +4,19 @@ const sessionController = require("../controllers/sessionController");
 
 // sessions routes
 
-router.get("/", sessionController.getAllSessions);
+router.route("/")
+  .get(sessionController.getAllSessions)
+  .post(sessionController.handleCreateSession)
 
-router.get("/sets", sessionController.getSessionsAndSets);
+router.route("/:id")
+  .get(sessionController.getSessionById)
+  .put(sessionController.handleUpdateSession)
+  .delete(sessionController.handleDeleteSession)
 
-router.get("/:id", sessionController.getSessionById);
+router.route("/sets")
+  .get(sessionController.getSessionsAndSets)
 
-router.get("/:id/sets", sessionController.getSessionByIdAndSets);
-
-router.post("/", sessionController.handleCreateSession);
-
-router.put("/:id", sessionController.handleUpdateSession);
-
-router.delete("/:id", sessionController.handleDeleteSession);
+router.route("/:id/sets")
+  .get(sessionController.getSessionByIdAndSets)
 
 module.exports = router;
