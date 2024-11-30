@@ -24,15 +24,14 @@ app.use(credentials);
 app.use(cors(corsOptions));
 
 // router imports
-const userRoutes = require("./routes/users");
-const exerciseRoutes = require("./routes/exercises");
-const sessionRoutes = require("./routes/sessions");
-const setRoutes = require("./routes/sets");
-
-app.use("/", userRoutes);
-app.use("/exercise", verifyAuth, exerciseRoutes);
-app.use("/session", verifyAuth, sessionRoutes);
-app.use("/set", verifyAuth, setRoutes);
+app.use("/login", require("./routes/auth"));
+app.use("/register", require("./routes/register"));
+app.use("/refresh", require("./routes/refresh"));
+app.use("/logout", require("./routes/logout"));
+app.use("/user", verifyAuth, require("./routes/users"));
+app.use("/exercise", verifyAuth, require("./routes/exercises"));
+app.use("/session", verifyAuth, require("./routes/sessions"));
+app.use("/set", verifyAuth, require("./routes/sets"));
 
 app.listen(port, async () => {
   try {
