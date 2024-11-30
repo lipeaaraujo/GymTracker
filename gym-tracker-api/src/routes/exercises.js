@@ -50,6 +50,7 @@ router.get("/:id/sessions", async (req, res) => {
 // create a new exercise
 router.post("/", async (req, res) => {
   const exercise = new Exercise({
+    user: req.body.user,
     name: req.body.name,
     description: req.body.description,
   });

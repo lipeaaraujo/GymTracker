@@ -32,30 +32,6 @@ function App() {
         <Route path='*' element={<NoPage />} />
       </Route>
     </Routes>
-    // <>
-    //   { loggedIn ? (
-    //     <div className='p-4 h-screen flex flex-col'>
-    //       <Header handleShowNavbar={handleShowNavbar}/>
-
-    //       <div className='flex flex-row h-full'>
-    //         <Navbar show={showNavbar}/>
-
-    //         <div className='p-4 bg-zinc-800 rounded-lg w-full h-full'>
-    //           <Routes>
-    //             <Route index element={<Exercises />} />
-    //             <Route path="/viewexercise" element={<ViewExercise />} />
-    //             <Route path="*" element={<NoPage />} />
-    //           </Routes>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   ) : (
-    //     <Routes>
-    //       <Route path="/login" element={<Login />} />
-    //       <Route path="/register" element={<Register />} />
-    //     </Routes>
-    //   )}
-    // </>
   );
 }
 
