@@ -46,8 +46,8 @@ function Login() {
         }
       )
       console.log(response?.data);
-      const accessToken = response?.data?.accessToken;
-      setAuth({ email, password, accessToken });
+      const { accessToken, user } = response?.data;
+      setAuth({ user, accessToken });
       setEmail("");
       setPassword("");
       navigate(from, { replace: true })

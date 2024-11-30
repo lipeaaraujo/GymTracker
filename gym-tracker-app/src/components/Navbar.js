@@ -14,8 +14,6 @@ function Navbar( { show } ) {
     { name: "Personal Health", href: "/health", logo: <BiHealth /> },
   ]
 
-  console.log(location)
-
   return (
     <ul 
       className={`transition-all duration-700 bg-zinc-800 h-full 
