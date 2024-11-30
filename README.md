@@ -1,11 +1,9 @@
-<img src="assets/logo.webp" width=100 align=left style="border-radius: 20px;">
+<img src="assets/logo.webp" width=100px align=left>
 
 ### `GymTracker`
+A gym tracking app
 
-<br>
-<br>
-<br>
-<br>
+## About
 
 **GymTracker** is a personal fitness web app designed to help users stay motivated and organized in their fitness journey. Whether you're a beginner or an experienced athlete, this app makes it easy to track your workout progress, set goals, and monitor performance over time. By logging exercises, sets, repetitions, and weights, you can get a clear picture of your growth and achievements.
 
