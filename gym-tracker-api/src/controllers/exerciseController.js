@@ -25,12 +25,12 @@ const getExerciseById = async (req, res) => {
 
 const getExerciseAndSessions = async (req, res) => {
   try {
-    const sessions = await Session.find({ exercise: req.params.id });
-
     const exercise = await Exercise.findById(req.params.id);
     if (exercise == null) {
       return res.status(404).json({ message: "Cannot find exercise" });
     }
+
+    const sessions = await Session.find({ exercise: req.params.id });
 
     exercise.sessions = sessions;
     return res.status(200).json(exercise);
