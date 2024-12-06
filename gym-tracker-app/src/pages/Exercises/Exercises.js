@@ -5,6 +5,7 @@ import ExerciseModal from "../../components/ExerciseModal";
 import ExerciseBox from "../../components/ExerciseBox";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
+import CreateNewButton from "../../components/CreateNewButton";
 
 const USER_URL = "/user";
 const EXERCISE_URL = "/exercises";
@@ -49,21 +50,17 @@ function Exercises() {
         open={exerciseModal}
         onClose={() => setExerciseModal(false)}
       />
-
-      <div className="flex gap-4 flex-wrap">
-        {exercises.map((exercise) => (
-          <ExerciseBox icon={<CgGym />} name={exercise.name} />
-        ))}
-
-        <button
-          className="bg-neutral-900 w-32 h-32 rounded-xl hover:bg-zinc-600 duration-300"
-          onClick={() => setExerciseModal(true)}
-        >
-          <div className="w-full h-full flex flex-col items-center justify-center">
-            <FaPlus />
-          </div>
-        </button>
-      </div>
+      <section>
+        <header className="pb-1">
+          <h2>Your exercises:</h2>
+        </header>
+        <article className="flex gap-4 flex-wrap">
+          {exercises.map((exercise) => (
+            <ExerciseBox icon={<CgGym />} name={exercise.name} />
+          ))}
+          <CreateNewButton handleClick={() => setExerciseModal(true)}/>
+        </article>
+      </section>
     </>
   );
 }
