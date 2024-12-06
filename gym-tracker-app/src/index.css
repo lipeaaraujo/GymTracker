@@ -36,6 +36,10 @@ input {
   @apply bg-zinc-700 p-1.5 rounded-lg
 }
 
+textarea {
+  @apply bg-zinc-700 p-1.5 rounded-lg resize-none 
+}
+
 button {
   @apply p-2 bg-zinc-700 rounded-xl hover:bg-zinc-600
 }

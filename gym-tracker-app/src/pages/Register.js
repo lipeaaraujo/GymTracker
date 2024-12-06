@@ -61,9 +61,10 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // prevent bypass of required fields.
     const nameMatch = NAME_REGEX.test(name);
     const pwdMatch = PWD_REGEX.test(password);
-    
     if (!nameMatch || !pwdMatch) {
       setErrMsg('Invalid Entry');
       return;

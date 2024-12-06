@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { CgGym } from "react-icons/cg";
-import { FaPlus } from "react-icons/fa";
-import ExerciseModal from "../../components/ExerciseModal";
+import ExerciseModal from "../../components/NewExerciseModal";
 import ExerciseBox from "../../components/ExerciseBox";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
@@ -57,6 +56,7 @@ function Exercises() {
       <ExerciseModal
         open={exerciseModal}
         onClose={() => setExerciseModal(false)}
+        setExercises={setExercises}
       />
       <section>
         <header className="pb-1">
