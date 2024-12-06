@@ -31,8 +31,16 @@ function Exercises() {
           }
         );
         isMounted && setExercises(response?.data);
+        isMounted && setErrMsg("");
       } catch (err) {
-        console.error(err);
+        if (!isMounted) return;
+        if (!err?.response) {
+          setErrMsg("No Server Response");
+        } else if (err.response?.status === 403) {
+          setErrMsg("Unauthorized");
+        } else {
+          setErrMsg("Request Failed");
+        }
       }
     };
 
@@ -53,12 +61,15 @@ function Exercises() {
       <section>
         <header className="pb-1">
           <h2>Your exercises:</h2>
+          <p className={errMsg ? "w-fit bg-red-800 p-1 rounded-lg" : "hidden"}>
+            {errMsg}
+          </p>
         </header>
         <article className="flex gap-4 flex-wrap">
           {exercises.map((exercise) => (
             <ExerciseBox icon={<CgGym />} name={exercise.name} />
           ))}
-          <CreateNewButton handleClick={() => setExerciseModal(true)}/>
+          <CreateNewButton handleClick={() => setExerciseModal(true)} />
         </article>
       </section>
     </>
