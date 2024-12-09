@@ -6,7 +6,7 @@ import useAuth from "../hooks/useAuth";
 const LOGIN_URL = "/login";
 
 function Login() {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,6 +63,14 @@ function Login() {
     }
   }
 
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist])
+
+  const togglePersist = () => {
+    setPersist(prev => !prev);
+  }
+
   return (
     <div className="w-1/4 p-4 bg-zinc-800 rounded-lg">
       <h2>Login</h2>
@@ -91,6 +99,18 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <div className="flex gap-1">
+          <input 
+            type="checkbox"
+            id="persist"
+            ref={userRef}
+            value={persist}
+            onChange={togglePersist}
+          />
+          <label htmlFor="persist">
+            Trust This Device
+          </label>
+        </div>
         <Link to="/register" className="self-end underline">
           Create Account
         </Link>
