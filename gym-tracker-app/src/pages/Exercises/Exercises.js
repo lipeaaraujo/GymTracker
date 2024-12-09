@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CgGym } from "react-icons/cg";
 import ExerciseModal from "../../components/NewExerciseModal";
 import ExerciseBox from "../../components/ExerciseBox";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import CreateNewButton from "../../components/CreateNewButton";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const USER_URL = "/user";
 const EXERCISE_URL = "/exercises";
@@ -12,6 +13,8 @@ const EXERCISE_URL = "/exercises";
 function Exercises() {
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [exercises, setExercises] = useState([]);
   const [exerciseModal, setExerciseModal] = useState(false);
@@ -37,6 +40,7 @@ function Exercises() {
           setErrMsg("No Server Response");
         } else if (err.response?.status === 403) {
           setErrMsg("Unauthorized");
+          navigate('/login', { state: { from: location }, replace: true })
         } else {
           setErrMsg("Request Failed");
         }

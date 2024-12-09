@@ -10,6 +10,7 @@ import PublicLayout from './components/layouts/PublicLayout';
 import RequireAuth from './components/RequireAuth';
 import Routines from './pages/Routines/Routines';
 import PersonalHealth from './pages/PersonalHealth/PersonalHealth';
+import PersistLogin from './components/PersistLogin';
 
 function App() {
 
@@ -23,12 +24,14 @@ function App() {
         </Route>
 
         {/* protected routes */}
-        <Route element={<RequireAuth />} >
-          <Route element={<AuthLayout />} >
-            <Route path='/' element={<Exercises />} />
-            <Route path='/routines' element={<Routines />} />
-            <Route path='/health' element={<PersonalHealth />} />
-            <Route path='view-exercise' element={<ViewExercise />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />} >
+            <Route element={<AuthLayout />} >
+              <Route path='/' element={<Exercises />} />
+              <Route path='/routines' element={<Routines />} />
+              <Route path='/health' element={<PersonalHealth />} />
+              <Route path='view-exercise' element={<ViewExercise />} />
+            </Route>
           </Route>
         </Route>
 
