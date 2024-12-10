@@ -63,24 +63,26 @@ function Exercises() {
         onClose={() => setExerciseModal(false)}
         setExercises={setExercises}
       />
-      <section>
+      <section className="h-full overflow-y-scroll">
         <header className="pb-1">
           <h2>Your exercises:</h2>
           <p className={errMsg ? "w-fit bg-red-800 p-1 rounded-lg" : "hidden"}>
             {errMsg}
           </p>
         </header>
-        <article className="flex gap-4 flex-wrap">
-          {exercises.map((exercise) => (
-            <ExerciseBox
-              key={exercise.id}
-              icon={<CgGym />}
-              id={exercise._id}
-              name={exercise.name}
-            />
-          ))}
-          <CreateNewButton handleClick={() => setExerciseModal(true)} />
-        </article>
+        {exercises.length > 0 && (
+          <article className="flex gap-4 flex-wrap">
+            {exercises.map((exercise) => (
+              <ExerciseBox
+                key={exercise.id}
+                icon={<CgGym />}
+                id={exercise._id}
+                name={exercise.name}
+              />
+            ))}
+            <CreateNewButton handleClick={() => setExerciseModal(true)} />
+          </article>
+        )}
       </section>
     </>
   );
