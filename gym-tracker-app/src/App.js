@@ -28,9 +28,9 @@ function App() {
           <Route element={<RequireAuth />} >
             <Route element={<AuthLayout />} >
               <Route path='/' element={<Exercises />} />
-              <Route path='/routines' element={<Routines />} />
-              <Route path='/health' element={<PersonalHealth />} />
-              <Route path='view-exercise' element={<ViewExercise />} />
+              <Route path='routines' element={<Routines />} />
+              <Route path='health' element={<PersonalHealth />} />
+              <Route path='exercise/:id' element={<ViewExercise />} />
             </Route>
           </Route>
         </Route>

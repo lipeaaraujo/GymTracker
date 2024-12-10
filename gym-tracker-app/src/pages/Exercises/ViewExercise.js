@@ -1,53 +1,99 @@
-import { useState } from "react";
-import SessionModal from "../../components/SessionModal";
-import { FaPlus } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import SessionModal from "../../components/NewSessionModal";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import SessionBox from "../../components/SessionBox";
+import CreateNewButton from "../../components/CreateNewButton";
+import { CgGym } from "react-icons/cg";
+import { CiCalendar } from "react-icons/ci";
+
+const EXERCISE_URL = "/exercise";
 
 function ViewExercise() {
+  const { id } = useParams();
+  const axiosPrivate = useAxiosPrivate();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const exercise = {
-    name: "Legpress",
-    sessions: [
-      {
-        load: 150.0,
-        date: "07-10-2024",
-      },
-      {
-        load: 165.0,
-        date: "14-10-2024",
-      }
-    ]
-  }
-
+  const [exercise, setExercise] = useState({});
   const [sessionModal, setSessionModal] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getExercise = async () => {
+      try {
+        const response = await axiosPrivate.get(
+          `${EXERCISE_URL}/${id}/sessions`,
+          {
+            signal: controller.signal,
+          }
+        );
+        console.log(response?.data);
+        isMounted && setExercise(response?.data);
+        isMounted && setErrMsg("");
+      } catch (err) {
+        if (!isMounted) return;
+        if (!err?.response) {
+          setErrMsg("No Server Response");
+        } else if (err.response?.status === 403) {
+          setErrMsg("Unauthorized");
+          navigate("/login", { state: { from: location }, replace: true });
+        } else {
+          setErrMsg("Request failed");
+        }
+      }
+    };
+
+    getExercise();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
 
   return (
-    <div>
-      <SessionModal open={sessionModal} onClose={() => setSessionModal(false)} />
+    <>
+      <SessionModal
+        open={sessionModal}
+        onClose={() => setSessionModal(false)}
+      />
 
-      <header className="w-full m-auto text-center text-xl">
-        {exercise.name}
-      </header>
-      <div className="flex flex-row gap-4 flex-wrap">
-        {exercise.sessions.map((set) => (
-          <div className="bg-zinc-700 w-32 h-32 rounded-xl">
-            <div className="w-full h-full flex flex-col items-center justify-center">
-              <p>{set.load} kg</p>
-              <p>{set.date}</p>
-            </div>
-          </div>  
-        ))}
-        <button 
-          className="bg-neutral-900 w-32 h-32 rounded-xl hover:bg-zinc-600 duration-300"
-          onClick={() => setSessionModal(true)}
-        >
-          <div className="w-full h-full flex flex-col items-center justify-center">
-            <FaPlus />
+      <section className="flex flex-col gap-4">
+        <article className="flex flex-col gap-2">
+          <header className="w-full flex justify-center items-center gap-2">
+            <CgGym size={28} />
+            <h2>{exercise.name}</h2>
+          </header>
+          <div className="w-full flex justify-center">
+            <p className="bg-neutral-900 w-1/2 p-2 rounded-xl text-wrap">
+              <b>Description:</b> {exercise.description}
+            </p>
           </div>
-        </button>
-      </div>
-      
-    </div>
-  )
+        </article>
+        <article>
+          <header className="w-full flex justify-center items-center gap-2 text-xl">
+            <CiCalendar size={28}/>
+            <h2>Sessions</h2>
+          </header>
+          <div className="flex flex-row gap-4 flex-wrap">
+            {exercise?.sessions &&
+              exercise.sessions.map((session, i) => (
+                <SessionBox
+                  key={i}
+                  handleClick={() => console.log("abrir sessão")}
+                  session={session}
+                />
+              ))}
+            <CreateNewButton handleClick={() => setSessionModal(true)} />
+          </div>
+        </article>
+      </section>
+    </>
+  );
 }
 
 export default ViewExercise;

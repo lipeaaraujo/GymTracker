@@ -10,22 +10,24 @@ function SessionModal({ open, onClose }) {
   return (
     <Modal open={ open } onClose={ onClose } title={ "New Session" }>
       <form className="flex flex-col">
-        <label className="flex flex-col">
+        <label htmlFor="numSets">
           Number of Sets:
-          <input 
-            type="text"
-            value={numSets}
-            onChange={(e) => setNumSets(e.target.value)}
-          />
         </label>
-        <label className="flex flex-col">
+        <input 
+          type="text"
+          id="numSets"
+          value={numSets}
+          onChange={(e) => setNumSets(e.target.value)}
+        />
+        <label htmlFor="date">
           Date:
-          <input 
-            type="text"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
         </label>
+        <input 
+          type="text"
+          id="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
         <button className="w-full p-2 mt-8 bg-zinc-700 rounded-xl
                          hover:bg-zinc-600">
           Confirm

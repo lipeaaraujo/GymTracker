@@ -32,6 +32,7 @@ function Exercises() {
             signal: controller.signal,
           }
         );
+        console.log(exercises);
         isMounted && setExercises(response?.data);
         isMounted && setErrMsg("");
       } catch (err) {
@@ -40,7 +41,7 @@ function Exercises() {
           setErrMsg("No Server Response");
         } else if (err.response?.status === 403) {
           setErrMsg("Unauthorized");
-          navigate('/login', { state: { from: location }, replace: true })
+          navigate("/login", { state: { from: location }, replace: true });
         } else {
           setErrMsg("Request Failed");
         }
@@ -71,7 +72,12 @@ function Exercises() {
         </header>
         <article className="flex gap-4 flex-wrap">
           {exercises.map((exercise) => (
-            <ExerciseBox icon={<CgGym />} name={exercise.name} />
+            <ExerciseBox
+              key={exercise.id}
+              icon={<CgGym />}
+              id={exercise._id}
+              name={exercise.name}
+            />
           ))}
           <CreateNewButton handleClick={() => setExerciseModal(true)} />
         </article>
