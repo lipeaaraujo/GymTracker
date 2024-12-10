@@ -11,6 +11,7 @@ const SessionSchema = new mongoose.Schema({
   },
   numSets: {
     type: Number,
+    default: 0,
     required: true,
   },
   date: {

@@ -6,16 +6,18 @@ import SessionBox from "../../components/SessionBox";
 import CreateNewButton from "../../components/CreateNewButton";
 import { CgGym } from "react-icons/cg";
 import { CiCalendar } from "react-icons/ci";
+import useExercise from "../../hooks/useExercise";
 
 const EXERCISE_URL = "/exercise";
 
 function ViewExercise() {
   const { id } = useParams();
   const axiosPrivate = useAxiosPrivate();
+  const { setCurrentExercise } = useExercise();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [exercise, setExercise] = useState({});
+  const [exercise, setExercise] = useState();
   const [sessionModal, setSessionModal] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
@@ -31,10 +33,11 @@ function ViewExercise() {
             signal: controller.signal,
           }
         );
-        console.log(response?.data);
         isMounted && setExercise(response?.data);
+        isMounted && setCurrentExercise(response?.data);
         isMounted && setErrMsg("");
       } catch (err) {
+        console.error(err);
         if (!isMounted) return;
         if (!err?.response) {
           setErrMsg("No Server Response");
@@ -60,37 +63,48 @@ function ViewExercise() {
       <SessionModal
         open={sessionModal}
         onClose={() => setSessionModal(false)}
+        setExercise={setExercise}
       />
 
-      <section className="flex flex-col gap-4">
-        <article className="flex flex-col gap-2">
-          <header className="w-full flex justify-center items-center gap-2">
-            <CgGym size={28} />
-            <h2>{exercise.name}</h2>
-          </header>
-          <div className="w-full flex justify-center">
-            <p className="bg-neutral-900 w-1/2 p-2 rounded-xl text-wrap">
-              <b>Description:</b> {exercise.description}
-            </p>
-          </div>
-        </article>
-        <article>
-          <header className="w-full flex justify-center items-center gap-2 text-xl">
-            <CiCalendar size={28}/>
-            <h2>Sessions</h2>
-          </header>
-          <div className="flex flex-row gap-4 flex-wrap">
-            {exercise?.sessions &&
-              exercise.sessions.map((session, i) => (
-                <SessionBox
-                  key={i}
-                  handleClick={() => console.log("abrir sessão")}
-                  session={session}
-                />
-              ))}
-            <CreateNewButton handleClick={() => setSessionModal(true)} />
-          </div>
-        </article>
+      <section className="flex flex-col gap-4 h-full overflow-y-scroll">
+        <header className="pb-1">
+          <h2>Exercise Details:</h2>
+          <p className={errMsg ? "w-fit bg-red-800 p-1 rounded-lg" : "hidden"}>
+            {errMsg}
+          </p>
+        </header>
+        {exercise && (
+          <article className="flex flex-col gap-2">
+            <header className="w-full flex justify-center items-center gap-2">
+              <CgGym size={28} />
+              <h2>{exercise.name}</h2>
+            </header>
+            <section className="w-full flex justify-center">
+              <p className="bg-neutral-900 w-96 p-2 rounded-xl text-wrap break-words">
+                <b>Description:</b> {exercise.description}
+              </p>
+            </section>
+          </article>
+        )}
+        {exercise && (
+          <article className="flex flex-col gap-2">
+            <header className="w-full flex justify-center items-center gap-2 text-xl">
+              <CiCalendar size={28} />
+              <h2>Sessions</h2>
+            </header>
+            <section className="flex flex-row gap-4 flex-wrap">
+              {exercise?.sessions &&
+                exercise.sessions.map((session, i) => (
+                  <SessionBox
+                    key={i}
+                    handleClick={() => console.log("abrir sessão")}
+                    session={session}
+                  />
+                ))}
+              <CreateNewButton handleClick={() => setSessionModal(true)} />
+            </section>
+          </article>
+        )}
       </section>
     </>
   );

@@ -16,7 +16,7 @@ function Header( { handleShowNavbar } ) {
   }
 
   return (
-    <header className="py-1 flex items-center justify-between">
+    <header className="py-1 h-10 flex items-center justify-between">
       <button 
         className="w-fit h-fit p-1 rounded-md bg-transparent hover:bg-zinc-800 hover:cursor-pointer duration-300"
         onClick={handleShowNavbar}
