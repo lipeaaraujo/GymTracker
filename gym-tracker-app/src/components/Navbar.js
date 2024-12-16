@@ -17,8 +17,8 @@ function Navbar( { show } ) {
   return (
     <ul 
       className={`transition-all duration-700 bg-zinc-800 h-full 
-                  ${ show ? 'p-4 rounded-lg w-1/4  mr-5' 
-                  : 'px-0 py-4 rounded-lg w-0 overflow-hidden'}`}>
+                  ${ show ? 'p-4 w-56 rounded-lg mr-5' 
+                  : 'px-0 py-4 rounded-lg w-0'}`}>
       {navOptions.map((option) => {
         const active = location.pathname === option.href;
         return (

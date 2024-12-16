@@ -11,16 +11,14 @@ const AuthLayout = () => {
   };
 
   return (
-    <section className="p-4 h-full">
-      <div className="flex flex-col h-full overflow-clip">
-        <Header handleShowNavbar={handleShowNavbar} />
-        <section className="flex h-full" >
-          <Navbar show={showNavbar} />
-          <main className="p-4 bg-zinc-800 rounded-lg w-full max-w-full h-full">
-            <Outlet />
-          </main>
+    <section className="p-4 w-full h-full grid grid-rows-12 overflow-x-clip">
+      <Header handleShowNavbar={handleShowNavbar} />
+      <section className="flex row-span-11 h-full">
+        <Navbar show={showNavbar} />
+        <section className="p-4 bg-zinc-800 rounded-lg w-full h-full overflow-y-auto text-wrap">
+          <Outlet />
         </section>
-      </div>
+      </section>
     </section>
   );
 };
