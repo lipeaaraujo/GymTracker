@@ -67,3 +67,7 @@ button:disabled {
 	border-radius: 10px;
 	background-color: #646464;
 }
+
+.error {
+  @apply w-fit bg-red-800 p-1 rounded-lg
+}

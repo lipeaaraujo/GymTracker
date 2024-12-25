@@ -1,4 +1,3 @@
-import { IconContext } from "react-icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import useAuth from "../hooks/useAuth";
 import { IoIosLogOut } from "react-icons/io";
