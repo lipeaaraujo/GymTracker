@@ -12,14 +12,14 @@ const EXERCISE_URL = "/exercise";
 
 function ViewExercise() {
   const { id } = useParams();
+  const [exercise, setExercise] = useState();
   const axiosPrivate = useAxiosPrivate();
   const { setCurrentExercise } = useExercise();
   const location = useLocation();
   const navigate = useNavigate();
-
-  const [exercise, setExercise] = useState();
-  const [sessionModal, setSessionModal] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+
+  const [sessionModal, setSessionModal] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -57,6 +57,10 @@ function ViewExercise() {
       controller.abort();
     };
   }, []);
+
+  const viewSession = (sessionId) => {
+    navigate(`/session/${sessionId}`);
+  }
 
   return (
     <>
@@ -97,8 +101,9 @@ function ViewExercise() {
                 exercise.sessions.map((session, i) => (
                   <SessionBox
                     key={i}
-                    handleClick={() => console.log("abrir sessão")}
-                    session={session}
+                    numSets={session.numSets}
+                    date={session.date}
+                    handleClick={() => viewSession(session._id)}
                   />
                 ))}
               <CreateNewButton handleClick={() => setSessionModal(true)} />

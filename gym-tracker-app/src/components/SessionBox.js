@@ -1,12 +1,7 @@
-import { useState } from "react";
-import { CiCalendar } from "react-icons/ci";
+import { formatDate } from "../utils/dateUtils";
 
-const SessionBox = ({ session, handleClick }) => {
-  const date = new Date(session.date);
-
-  const f = new Intl.DateTimeFormat("en-us", {
-    dateStyle: "full",
-  })
+const SessionBox = ({ numSets, date, handleClick }) => {
+  const formattedDate = formatDate(date);
 
   return (
     <button
@@ -14,10 +9,10 @@ const SessionBox = ({ session, handleClick }) => {
       className="bg-zinc-700 w-32 h-32 rounded-xl flex flex-col justify-center text-left"
     >
       <p>
-        <b>Sets:</b> {session.numSets}
+        <b>Sets:</b> {numSets}
       </p>
       <p>
-        <b>Date:</b> {f.format(date)}
+        <b>Date:</b> {formattedDate}
       </p>
     </button>
   );
