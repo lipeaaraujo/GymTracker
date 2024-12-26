@@ -82,7 +82,6 @@ function Login() {
         <input
           type="text"
           id="email"
-          autoComplete="off"
           ref={userRef}
           value={email}
           onChange={(e) => setEmail(e.target.value)}

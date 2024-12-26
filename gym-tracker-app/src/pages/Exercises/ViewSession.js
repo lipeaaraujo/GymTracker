@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
-import { FaPlus, FaWeightHanging } from "react-icons/fa";
+import { FaPlus, FaRegSave, FaWeightHanging } from "react-icons/fa";
 import { CiCalendar, CiEdit, CiTrash } from "react-icons/ci";
+import { GoChecklist } from "react-icons/go"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../../utils/dateUtils";
 import { GiWeight, GiWeightLiftingUp } from "react-icons/gi";
+import { IoIosClose, IoIosCloseCircle, IoIosCloseCircleOutline } from "react-icons/io";
+import NewSetForm from "../../components/NewSetForm";
 
 const SESSIONS_URL = "/session";
 
 const ViewSession = () => {
   const { id } = useParams();
   const [session, setSession] = useState();
+  const [numSets, setNumSets] = useState(0);
+  const [personalBest, setPersonalBest] = useState(0); // remove later
   const [formattedDate, setFormattedDate] = useState();
   const [errMsg, setErrMsg] = useState("");
 
@@ -55,6 +60,10 @@ const ViewSession = () => {
 
   useEffect(() => {
     session && setFormattedDate(formatDate(session.date));
+    if (session?.sets) {
+      setNumSets(session.sets.length);
+      setPersonalBest(Math.max(...session.sets.map(set => set.weight)));
+    }
   }, [session])
 
   return (
@@ -71,11 +80,11 @@ const ViewSession = () => {
           </section>
           <section className="w-fit flex items-center gap-1">
             <GiWeightLiftingUp size={28} />
-            <p><b>Sets:</b> {session.numSets}</p>
+            <p><b>Sets:</b> {numSets}</p>
           </section>
           <section className="w-fit flex items-center gap-1">
             <GiWeight size={28} />
-            <p><b>Biggest Load:</b> {session?.biggestLoad}</p>
+            <p><b>Personal Best:</b> {personalBest} kg</p>
           </section>
         </article>
       )}
@@ -86,22 +95,30 @@ const ViewSession = () => {
             <h2>Sets:</h2>
           </header>
           {session.sets.map((set) => (
-            <button>teste</button>
+            <section className="bg-zinc-700 w-full rounded-xl p-1 px-4 flex gap-2 items-center">
+              <section className="w-fit flex items-center gap-1">
+                <GiWeightLiftingUp size={20}/>
+                <p><b>Repetitions:</b> {set.numReps}</p>              
+              </section>
+              <section className="w-fit flex items-center gap-1 mr-auto">
+                <GiWeight size={20}/>
+                <p><b>Weight:</b> {set.weight} kg</p>              
+              </section>
+              <button className="p-1">
+                <CiEdit size={28}/>
+              </button>
+              <button className="p-1 hover:bg-red-600">
+                <CiTrash size={28}/>
+              </button>
+            </section>
           ))}
-          <section className="bg-zinc-700 w-full rounded-xl p-1 flex gap-2 items-center">
-            <p><b>Repetitions:</b> {}</p>
-            <p className="mr-auto"><b>Weight:</b> {}</p>
-            <button className="p-1 self-end">
-              <CiEdit size={28}/>
-            </button>
-            <button className="p-1 hover:bg-red-600">
-              <CiTrash size={28}/>
-            </button>
-          </section>
+          
           {addingSet && (
-            <form className="bg-zinc-700 w-full rounded-xl p-2">
-              {/* working */}
-            </form>
+            <NewSetForm
+              sessionId={session._id}
+              setSession={setSession}
+              handleCloseForm={() => setAddingSet(false)} 
+            />
           )}
           <button
             onClick={() => setAddingSet(true)}
