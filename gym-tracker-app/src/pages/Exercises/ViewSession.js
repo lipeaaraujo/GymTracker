@@ -8,6 +8,7 @@ import { formatDate } from "../../utils/dateUtils";
 import { GiWeight, GiWeightLiftingUp } from "react-icons/gi";
 import { IoIosClose, IoIosCloseCircle, IoIosCloseCircleOutline } from "react-icons/io";
 import NewSetForm from "../../components/NewSetForm";
+import SectionHeader from "../../components/SectionHeader";
 
 const SESSIONS_URL = "/session";
 
@@ -69,7 +70,7 @@ const ViewSession = () => {
   return (
     <section className="flex flex-col h-full gap-4 overflow-y-scroll">
       <header className="">
-        <h2>Session Details:</h2>
+        <SectionHeader title="Section Details:"/>
         <p className={errMsg ? "error" : "hidden"}>{errMsg}</p>
       </header>
       { session && (

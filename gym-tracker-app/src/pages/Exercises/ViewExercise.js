@@ -7,6 +7,7 @@ import CreateNewButton from "../../components/CreateNewButton";
 import { CgGym } from "react-icons/cg";
 import { CiCalendar } from "react-icons/ci";
 import useExercise from "../../hooks/useExercise";
+import SectionHeader from "../../components/SectionHeader";
 
 const EXERCISE_URL = "/exercise";
 
@@ -72,7 +73,7 @@ function ViewExercise() {
 
       <section className="flex flex-col gap-4 h-full overflow-y-scroll">
         <header className="pb-1">
-          <h2>Exercise Details:</h2>
+          <SectionHeader title="Exercise Details:"/>
           <p className={errMsg ? "w-fit bg-red-800 p-1 rounded-lg" : "hidden"}>
             {errMsg}
           </p>
