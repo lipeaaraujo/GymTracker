@@ -70,19 +70,17 @@ function Exercises() {
             {errMsg}
           </p>
         </header>
-        {exercises.length > 0 && (
-          <article className="flex gap-4 flex-wrap">
-            {exercises.map((exercise) => (
-              <ExerciseBox
-                key={exercise.id}
-                icon={<CgGym />}
-                id={exercise._id}
-                name={exercise.name}
-              />
-            ))}
-            <CreateNewButton handleClick={() => setExerciseModal(true)} />
-          </article>
-        )}
+        <article className="flex gap-4 flex-wrap">
+          {exercises.map((exercise) => (
+            <ExerciseBox
+              key={exercise.id}
+              icon={<CgGym />}
+              id={exercise._id}
+              name={exercise.name}
+            />
+          ))}
+          <CreateNewButton handleClick={() => setExerciseModal(true)} />
+        </article>
       </section>
     </>
   );

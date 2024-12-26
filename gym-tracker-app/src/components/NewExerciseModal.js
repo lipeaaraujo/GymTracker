@@ -62,6 +62,7 @@ function ExerciseModal({ open, onClose, setExercises }) {
         <input
           type="text"
           id="name"
+          autoComplete="off"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -72,6 +73,7 @@ function ExerciseModal({ open, onClose, setExercises }) {
         <textarea
           className="h-32"
           id="description"
+          autoComplete="off"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
