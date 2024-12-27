@@ -1,17 +1,26 @@
-import { CiEdit, CiTrash } from "react-icons/ci"
+import { CiEdit, CiTrash } from "react-icons/ci";
 
-const SectionHeader = ({ title, handleEdit, handleDelete }) => {
+const SectionHeader = ({ title, canEdit, handleEdit, handleDelete, errMsg }) => {
   return (
-    <section className="flex gap-2">
-      <h2 className="mr-auto">{title}</h2>
-      <button onClick={handleEdit}>
-        <CiEdit size={28}/>
-      </button>
-      <button className="bg-red-700 hover:bg-red-600" onClick={handleDelete}>
-        <CiTrash size={28}/>
-      </button>
-    </section>
-  )
-}
+    <header className="pb-1">
+      <section className="flex gap-2">
+        <h2 className="mr-auto">{title}</h2>
+        {canEdit && (
+          <button onClick={handleEdit}>
+            <CiEdit size={28} />
+          </button>
+        )}
+        {canEdit && (
+          <button className="bg-red-700 hover:bg-red-600" onClick={handleDelete}>
+            <CiTrash size={28} />
+          </button>
+        )}
+      </section>
+      <p className={errMsg ? "w-fit bg-red-800 p-1 rounded-lg" : "hidden"}>
+        {errMsg}
+      </p>
+    </header>
+  );
+};
 
 export default SectionHeader;

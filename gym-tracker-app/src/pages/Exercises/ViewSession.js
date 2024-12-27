@@ -69,10 +69,11 @@ const ViewSession = () => {
 
   return (
     <section className="flex flex-col h-full gap-4 overflow-y-scroll">
-      <header className="">
-        <SectionHeader title="Section Details:"/>
-        <p className={errMsg ? "error" : "hidden"}>{errMsg}</p>
-      </header>
+      <SectionHeader
+        title="Section Details:"
+        canEdit={session ? true : false}
+        errMsg={errMsg}
+      />
       { session && (
         <article className="w-full flex flex-col justify-center gap-2">
           <section className="w-fit flex items-center gap-1">
