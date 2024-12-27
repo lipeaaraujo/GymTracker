@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
-import { FaPlus, FaRegSave, FaWeightHanging } from "react-icons/fa";
+import { FaPlus, FaWeightHanging } from "react-icons/fa";
 import { CiCalendar, CiEdit, CiTrash } from "react-icons/ci";
-import { GoChecklist } from "react-icons/go"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../../utils/dateUtils";
 import { GiWeight, GiWeightLiftingUp } from "react-icons/gi";
-import { IoIosClose, IoIosCloseCircle, IoIosCloseCircleOutline } from "react-icons/io";
 import NewSetForm from "../../components/NewSetForm";
 import SectionHeader from "../../components/SectionHeader";
+import useSession from "../../hooks/useSession";
+import EditSessionModal from "../../components/EditSessionModal";
+import ConfirmModal from "../../components/ConfirmDeleteModal";
+import useExercise from "../../hooks/useExercise";
 
 const SESSIONS_URL = "/session";
 
 const ViewSession = () => {
   const { id } = useParams();
-  const [session, setSession] = useState();
+  const { currentExercise } = useExercise();
+  const { curSession, setCurSession } = useSession();
   const [numSets, setNumSets] = useState(0);
   const [personalBest, setPersonalBest] = useState(0); // remove later
   const [formattedDate, setFormattedDate] = useState();
@@ -23,6 +26,9 @@ const ViewSession = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [editModal , setEditModal] = useState(false);
+  const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 
   const [addingSet, setAddingSet] = useState(false);
 
@@ -35,7 +41,7 @@ const ViewSession = () => {
         const response = await axiosPrivate.get(`${SESSIONS_URL}/${id}/sets`, {
           signal: controller.signal,
         });
-        setSession(response.data);
+        setCurSession(response.data);
         setErrMsg("");
       } catch (err) {
         console.error(err);
@@ -59,67 +65,109 @@ const ViewSession = () => {
     };
   }, []);
 
-  useEffect(() => {
-    session && setFormattedDate(formatDate(session.date));
-    if (session?.sets) {
-      setNumSets(session.sets.length);
-      setPersonalBest(Math.max(...session.sets.map(set => set.weight)));
+  const deleteSession = async () => {
+    try {
+      const response = await axiosPrivate.delete(
+        `${SESSIONS_URL}/${id}`
+      )
+      navigate(`/exercise/${currentExercise._id}`)
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 403) {
+        setErrMsg("Unauthorized");
+        navigate("/login", { state: { from: location }, replace: true });
+      } else {
+        setErrMsg("Request failed");
+      }
     }
-  }, [session])
+  }
+
+  useEffect(() => {
+    curSession?.date && setFormattedDate(formatDate(curSession?.date));
+    if (curSession?.sets) {
+      setNumSets(curSession.sets.length);
+      setPersonalBest(Math.max(...curSession.sets.map((set) => set.weight)));
+    }
+  }, [curSession]);
 
   return (
+    <>
+    <EditSessionModal 
+      open={editModal}
+      onClose={() => setEditModal(false)}
+    />
+    <ConfirmModal 
+      open={confirmDeleteModal}
+      onClose={() => setConfirmDeleteModal(false)}
+      title="Delete Session"
+      message="Are you sure you want to delete this session?"
+      handleConfirm={deleteSession}
+    />
     <section className="flex flex-col h-full gap-4 overflow-y-scroll">
       <SectionHeader
-        title="Section Details:"
-        canEdit={session ? true : false}
+        title="Session Details:"
+        canEdit={curSession ? true : false}
+        handleEdit={() => setEditModal(true)}
+        handleDelete={() => setConfirmDeleteModal(true)}
         errMsg={errMsg}
       />
-      { session && (
+      {curSession?.date && (
         <article className="w-full flex flex-col justify-center gap-2">
           <section className="w-fit flex items-center gap-1">
             <CiCalendar size={28} />
-            <p><b>Date:</b> {formattedDate}</p>
+            <p>
+              <b>Date:</b> {formattedDate}
+            </p>
           </section>
           <section className="w-fit flex items-center gap-1">
             <GiWeightLiftingUp size={28} />
-            <p><b>Sets:</b> {numSets}</p>
+            <p>
+              <b>Sets:</b> {numSets}
+            </p>
           </section>
           <section className="w-fit flex items-center gap-1">
             <GiWeight size={28} />
-            <p><b>Personal Best:</b> {personalBest} kg</p>
+            <p>
+              <b>Personal Best:</b> {personalBest} kg
+            </p>
           </section>
         </article>
       )}
-      { session && (
+      {curSession?.date && (
         <article className="flex flex-col items-center gap-2">
           <header className="w-full flex gap-2 justify-center">
             <FaWeightHanging size={28} />
             <h2>Sets:</h2>
           </header>
-          {session.sets.map((set) => (
+          {curSession.sets.map((set) => (
             <section className="bg-zinc-700 w-full rounded-xl p-1 px-4 flex gap-2 items-center">
               <section className="w-fit flex items-center gap-1">
-                <GiWeightLiftingUp size={20}/>
-                <p><b>Repetitions:</b> {set.numReps}</p>              
+                <GiWeightLiftingUp size={20} />
+                <p>
+                  <b>Repetitions:</b> {set.numReps}
+                </p>
               </section>
               <section className="w-fit flex items-center gap-1 mr-auto">
-                <GiWeight size={20}/>
-                <p><b>Weight:</b> {set.weight} kg</p>              
+                <GiWeight size={20} />
+                <p>
+                  <b>Weight:</b> {set.weight} kg
+                </p>
               </section>
               <button className="p-1">
-                <CiEdit size={28}/>
+                <CiEdit size={28} />
               </button>
               <button className="p-1 hover:bg-red-600">
-                <CiTrash size={28}/>
+                <CiTrash size={28} />
               </button>
             </section>
           ))}
-          
+
           {addingSet && (
             <NewSetForm
-              sessionId={session._id}
-              setSession={setSession}
-              handleCloseForm={() => setAddingSet(false)} 
+              sessionId={curSession._id}
+              setSession={setCurSession}
+              handleCloseForm={() => setAddingSet(false)}
             />
           )}
           <button
@@ -131,6 +179,7 @@ const ViewSession = () => {
         </article>
       )}
     </section>
+    </>
   );
 };
 

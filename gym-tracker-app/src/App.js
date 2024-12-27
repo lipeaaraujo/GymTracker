@@ -13,6 +13,7 @@ import PersonalHealth from "./pages/PersonalHealth/PersonalHealth";
 import PersistLogin from "./components/PersistLogin";
 import { ExerciseProvider } from "./context/ExerciseProvider";
 import ViewSession from "./pages/Exercises/ViewSession";
+import { SessionProvider } from "./context/SessionProvider";
 
 function App() {
   return (
@@ -33,7 +34,9 @@ function App() {
               <Route path="health" element={<PersonalHealth />} />
               <Route element={<ExerciseProvider />}>
                 <Route path="exercise/:id" element={<ViewExercise />} />
-                <Route path="session/:id" element={<ViewSession />} />
+                <Route element={<SessionProvider />}>
+                  <Route path="session/:id" element={<ViewSession />} />
+                </Route>
               </Route>
             </Route>
           </Route>
