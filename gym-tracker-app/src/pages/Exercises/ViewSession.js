@@ -11,6 +11,7 @@ import useSession from "../../hooks/useSession";
 import EditSessionModal from "../../components/EditSessionModal";
 import ConfirmModal from "../../components/ConfirmDeleteModal";
 import useExercise from "../../hooks/useExercise";
+import SetDetails from "../../components/SetDetails";
 
 const SESSIONS_URL = "/session";
 
@@ -41,7 +42,7 @@ const ViewSession = () => {
         const response = await axiosPrivate.get(`${SESSIONS_URL}/${id}/sets`, {
           signal: controller.signal,
         });
-        setCurSession(response.data);
+        setCurSession(response?.data);
         setErrMsg("");
       } catch (err) {
         console.error(err);
@@ -70,7 +71,7 @@ const ViewSession = () => {
       const response = await axiosPrivate.delete(
         `${SESSIONS_URL}/${id}`
       )
-      navigate(`/exercise/${currentExercise._id}`)
+      navigate(`/exercise/${currentExercise._id}`);
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -141,26 +142,9 @@ const ViewSession = () => {
             <h2>Sets:</h2>
           </header>
           {curSession.sets.map((set) => (
-            <section className="bg-zinc-700 w-full rounded-xl p-1 px-4 flex gap-2 items-center">
-              <section className="w-fit flex items-center gap-1">
-                <GiWeightLiftingUp size={20} />
-                <p>
-                  <b>Repetitions:</b> {set.numReps}
-                </p>
-              </section>
-              <section className="w-fit flex items-center gap-1 mr-auto">
-                <GiWeight size={20} />
-                <p>
-                  <b>Weight:</b> {set.weight} kg
-                </p>
-              </section>
-              <button className="p-1">
-                <CiEdit size={28} />
-              </button>
-              <button className="p-1 hover:bg-red-600">
-                <CiTrash size={28} />
-              </button>
-            </section>
+            <SetDetails 
+              set={set}
+            />
           ))}
 
           {addingSet && (
