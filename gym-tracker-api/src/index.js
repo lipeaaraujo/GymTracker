@@ -1,11 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const connectDB = require("./config/dbConnect");
 const cookieParser = require("cookie-parser")
 const verifyAuth = require("./middlewares/verifyAuth");
 const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const credentials = require("./middlewares/credentials");
+
+// connect to database
+connectDB();
 
 // starting app and port
 const app = express();
@@ -33,12 +37,10 @@ app.use("/exercise", verifyAuth, require("./routes/exercises"));
 app.use("/session", verifyAuth, require("./routes/sessions"));
 app.use("/set", verifyAuth, require("./routes/sets"));
 
-app.listen(port, async () => {
-  try {
-    await mongoose.connect(process.env.DATABASE_URL);
-    console.log("Connected to database");
-  } catch (err) {
-    console.log("Unable to connect to database");
-  }
-  console.log(`Running on port ${port}`);
+mongoose.connection.once('open', () => {
+  console.log("Connected to database");
+  app.listen(port, async () => {
+    console.log(`Running on port ${port}`);
+  })  
 })
+
