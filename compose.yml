@@ -1,0 +1,21 @@
+services:
+  api:
+    container_name: gymtracker-api
+    build:
+      context: ./gym-tracker-api
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./gym-tracker-api/.env
+  app:
+    container_name: gymtracker-app
+    build:
+      context: ./gym-tracker-app
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./gym-tracker-app/.env
