@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const allowedOrigins = [
   'https://www.yoursite.com',
   'http://127.00.0.1:4000',
