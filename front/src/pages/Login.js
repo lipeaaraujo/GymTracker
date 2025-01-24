@@ -45,7 +45,6 @@ function Login() {
           withCredentials: true
         }
       )
-      console.log(response?.data);
       const { accessToken, user } = response?.data;
       setAuth({ user, accessToken });
       setEmail("");

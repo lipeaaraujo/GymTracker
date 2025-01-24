@@ -1,10 +1,12 @@
 import { CiEdit, CiTrash } from "react-icons/ci";
+import BackButton from "./BackButton";
 
 const SectionHeader = ({ title, canEdit, handleEdit, handleDelete, errMsg }) => {
   return (
     <header className="pb-1">
       <section className="flex gap-2">
-        <h2 className="mr-auto">{title}</h2>
+        <BackButton />
+        <h2 className="mr-auto text-center">{title}</h2>
         {canEdit && (
           <button onClick={handleEdit}>
             <CiEdit size={28} />
