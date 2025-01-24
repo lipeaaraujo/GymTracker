@@ -1,0 +1,25 @@
+site_name: Gym Tracker Docs
+repo_name: GymTracker
+repo_url: https://github.com/lipeaaraujo/GymTracker
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: blue
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/weather-night 
+        name: Modo escuro
+        
+    - scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Modo claro
+
+nav:
+  - Home: index.md
+  - About: about.md
