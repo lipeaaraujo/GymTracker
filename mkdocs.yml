@@ -23,3 +23,5 @@ theme:
 nav:
   - Home: index.md
   - About: about.md
+  - Architecture:
+    - Class Diagram: architecture/classDiagram.md
