@@ -1,0 +1,33 @@
+name: Task
+description: New task to be done.
+labels: ["task"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the task to be done.
+    validations:
+      required: true
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tasks
+      description: List the tasks that need to be done.
+    validations:
+      required: true
+  - type: textarea
+    id: validation-criteria
+    attributes:
+      label: Validation Criteria
+      description: Describe how to validate the task.
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: Creating this issue means you agree to follow the project's [Code of Conduct](../blob/master/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
