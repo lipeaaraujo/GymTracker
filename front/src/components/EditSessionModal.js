@@ -12,6 +12,7 @@ const EditSessionModal = ({ open, onClose }) => {
   const { currentExercise } = useExercise();
   const { curSession, setCurSession } = useSession();
   const axiosPrivate = useAxiosPrivate();
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,10 +32,12 @@ const EditSessionModal = ({ open, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.put(
         `${SESSIONS_URL}/${curSession._id}`,
         JSON.stringify({ exercise: currentExercise._id, date })
       );
+      setSubmitting(false);
       setDate("");
       setCurSession(prev => ({
         ...response?.data,
@@ -69,7 +72,7 @@ const EditSessionModal = ({ open, onClose }) => {
         <button
           className="w-full p-2 mt-8 bg-zinc-700 rounded-xl
                          hover:bg-zinc-600"
-          disabled={!formValid}
+          disabled={!formValid || submitting}
         >
           Confirm
         </button>

@@ -11,6 +11,7 @@ const DESCRIPTION_REGEX = /^\w+(?: \w+)*$/;
 function EditExerciseModal({ open, onClose }) {
   const axiosPrivate = useAxiosPrivate();
   const { auth } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
   const { currentExercise, setCurrentExercise } = useExercise();
 
   const [name, setName] = useState("");
@@ -52,10 +53,12 @@ function EditExerciseModal({ open, onClose }) {
     }
 
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.put(
         `${EXERCISE_URL}/${currentExercise._id}`,
         JSON.stringify({ user: auth.user.id, name, description }),
       )
+      setSubmitting(true);
       setName("");
       setDescription("");
       setCurrentExercise(prev => ({ 
@@ -100,7 +103,7 @@ function EditExerciseModal({ open, onClose }) {
           onChange={(e) => setDescription(e.target.value)}
         />
         <button 
-          disabled={!validName || !validDesc}
+          disabled={!validName || !validDesc || submitting}
           className="w-full mt-8"
         >
           Confirm

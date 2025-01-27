@@ -9,6 +9,7 @@ const SESSIONS_URL = "/session";
 function SessionModal({ open, onClose }) {
   const { currentExercise, setCurrentExercise } = useExercise();
   const axiosPrivate = useAxiosPrivate();
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -24,10 +25,12 @@ function SessionModal({ open, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.post(
         SESSIONS_URL,
         JSON.stringify({ exercise: currentExercise._id, date })
       );
+      setSubmitting(false);
       setDate("");
       setCurrentExercise(prev => {
         return {...prev, sessions: [...prev.sessions, response?.data]};
@@ -61,7 +64,7 @@ function SessionModal({ open, onClose }) {
         <button
           className="w-full p-2 mt-8 bg-zinc-700 rounded-xl
                          hover:bg-zinc-600"
-          disabled={!formValid}
+          disabled={!formValid || submitting}
         >
           Confirm
         </button>

@@ -24,6 +24,7 @@ const SetDetails = ({ set }) => {
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 
   const axiosPrivate = useAxiosPrivate();
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,6 +45,7 @@ const SetDetails = ({ set }) => {
     }
 
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.put(
         `${SET_URL}/${set._id}`,
         JSON.stringify({
@@ -52,6 +54,7 @@ const SetDetails = ({ set }) => {
           weight: weight,
         })
       );
+      setSubmitting(false);
       setReps(0);
       setWeight("");
       setCurSession((prev) => {
@@ -153,11 +156,12 @@ const SetDetails = ({ set }) => {
           <button
             className="p-1 bg-green-700 hover:bg-green-500 disabled:bg-zinc-700"
             type="submit"
-            disabled={!formValid}
+            disabled={!formValid || submitting}
           >
             <GoChecklist size={28} />
           </button>
           <button
+            disabled={submitting}
             className="p-1 bg-red-700 hover:bg-red-500"
             type="button"
             onClick={() => setEditing(false)}

@@ -15,6 +15,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
   const [errMsg, setErrMsg] = useState("");
 
   const axiosPrivate = useAxiosPrivate();
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,6 +29,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
     }
 
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.post(
         SET_URL,
         JSON.stringify({
@@ -36,6 +38,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
           weight: weight,
         })
       );
+      setSubmitting(false);
       setReps(0);
       setWeight("");
       setSession((prev) => {
@@ -101,11 +104,12 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
       <button
         className="p-1 bg-green-700 hover:bg-green-500 disabled:bg-zinc-700"
         type="submit"
-        disabled={!formValid}
+        disabled={!formValid || submitting}
       >
         <GoChecklist size={28} />
       </button>
       <button
+        disabled={submitting}
         className="p-1 bg-red-700 hover:bg-red-500"
         type="button"
         onClick={handleCloseForm}
