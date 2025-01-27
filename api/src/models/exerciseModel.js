@@ -16,6 +16,9 @@ const ExerciseSchema = new mongoose.Schema({
   description: {
     type: String
   },
+  personalBest: {
+    type: Number
+  },
   sessions: [{ type:mongoose.Schema.Types.ObjectId, ref: "Session" }]
 });
 

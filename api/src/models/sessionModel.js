@@ -12,12 +12,15 @@ const SessionSchema = new mongoose.Schema({
   numSets: {
     type: Number,
     default: 0,
-    required: true,
   },
   date: {
     type: Date,
     default: Date.now,
     required: true,
+  },
+  biggestLoad: {
+    type: Number,
+    default: 0,
   },
   sets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Set" }],
 });
