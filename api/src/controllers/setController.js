@@ -1,5 +1,6 @@
 // model import
 const Set = require("../models/setModel");
+const Session = require("../models/sessionModel");
 
 const getAllSets = async (req, res) => {
   try {
@@ -28,7 +29,17 @@ const handleCreateSet = async (req, res) => {
     numReps: req.body.numReps,
     weight: req.body.weight,
   });
+
   try {
+    // update session's number of sets and biggest load.
+    const session = await Session.findById(set.session);
+    session.numSets++;
+    if (session.biggestLoad < set.weight) {
+      session.biggestLoad = set.weight;
+    }
+    await session.save();
+    
+    // save the new set.
     await set.save();
     return res.status(201).json(set);
   } catch (err) {
