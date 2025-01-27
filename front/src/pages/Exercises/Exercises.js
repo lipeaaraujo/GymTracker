@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CgGym } from "react-icons/cg";
-import ExerciseModal from "../../components/NewExerciseModal";
-import ExerciseBox from "../../components/ExerciseBox";
+import ExerciseModal from "../../components/exercises/NewExerciseModal";
+import ExerciseBox from "../../components/exercises/ExerciseBox";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import CreateNewButton from "../../components/CreateNewButton";

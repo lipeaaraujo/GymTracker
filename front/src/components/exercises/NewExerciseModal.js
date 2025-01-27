@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import useAuth from "../hooks/useAuth";
+import Modal from "../Modal";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAuth from "../../hooks/useAuth";
 
 const EXERCISE_URL = "/exercise";
 const NAME_REGEX = /^\w+(?: \w+)*$/;

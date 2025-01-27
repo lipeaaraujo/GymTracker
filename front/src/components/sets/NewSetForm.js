@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { GoChecklist } from "react-icons/go";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
-import useSession from "../hooks/useSession";
+import useSession from "../../hooks/useSession";
 
 const SET_URL = "/set";
 const MAX_REPS = 1000

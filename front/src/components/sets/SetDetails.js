@@ -3,10 +3,10 @@ import { CiEdit, CiTrash } from "react-icons/ci";
 import { GiWeight, GiWeightLiftingUp } from "react-icons/gi";
 import { GoChecklist } from "react-icons/go";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import useSession from "../hooks/useSession";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useSession from "../../hooks/useSession";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
-import ConfirmModal from "./ConfirmDeleteModal";
+import ConfirmModal from "../ConfirmDeleteModal";
 
 const SET_URL = "/set";
 const MAX_REPS = 1000

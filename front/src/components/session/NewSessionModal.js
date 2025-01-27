@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import useExercise from "../hooks/useExercise";
+import Modal from "../Modal";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useExercise from "../../hooks/useExercise";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const SESSIONS_URL = "/session";

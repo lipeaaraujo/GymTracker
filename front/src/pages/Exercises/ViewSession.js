@@ -5,13 +5,13 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../../utils/dateUtils";
 import { GiWeight, GiWeightLiftingUp } from "react-icons/gi";
-import NewSetForm from "../../components/NewSetForm";
+import NewSetForm from "../../components/sets/NewSetForm";
 import SectionHeader from "../../components/SectionHeader";
 import useSession from "../../hooks/useSession";
-import EditSessionModal from "../../components/EditSessionModal";
+import EditSessionModal from "../../components/session/EditSessionModal";
 import ConfirmModal from "../../components/ConfirmDeleteModal";
 import useExercise from "../../hooks/useExercise";
-import SetDetails from "../../components/SetDetails";
+import SetDetails from "../../components/sets/SetDetails";
 
 const SESSIONS_URL = "/session";
 

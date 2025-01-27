@@ -1,4 +1,4 @@
-import { formatDate } from "../utils/dateUtils";
+import { formatDate } from "../../utils/dateUtils";
 
 const SessionBox = ({ numSets, date, handleClick }) => {
   const formattedDate = formatDate(date);

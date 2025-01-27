@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import NewSessionModal from "../../components/NewSessionModal";
+import NewSessionModal from "../../components/session/NewSessionModal";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import SessionBox from "../../components/SessionBox";
+import SessionBox from "../../components/session/SessionBox";
 import CreateNewButton from "../../components/CreateNewButton";
 import { CgGym } from "react-icons/cg";
 import { CiCalendar } from "react-icons/ci";
 import useExercise from "../../hooks/useExercise";
 import SectionHeader from "../../components/SectionHeader";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
-import EditExerciseModal from "../../components/EditExerciseModal";
+import EditExerciseModal from "../../components/exercises/EditExerciseModal";
 
 const EXERCISE_URL = "/exercise";
 
