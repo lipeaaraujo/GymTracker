@@ -3,16 +3,19 @@ import { GoChecklist } from "react-icons/go";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
+import useSession from "../hooks/useSession";
 
 const SET_URL = "/set";
 const MAX_REPS = 1000
 const MAX_WEIGHT = 10000
 
-const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
+const NewSetForm = ({ handleCloseForm }) => {
   const [reps, setReps] = useState(0);
   const [weight, setWeight] = useState(0);
   const [formValid, setFormValid] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+
+  const { curSession, setCurSession } = useSession();
 
   const axiosPrivate = useAxiosPrivate();
   const [submitting, setSubmitting] = useState(false);
@@ -33,18 +36,20 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
       const response = await axiosPrivate.post(
         SET_URL,
         JSON.stringify({
-          session: sessionId,
+          session: curSession._id,
           numReps: reps,
           weight: weight,
         })
       );
       setSubmitting(false);
+      // resetting form
       setReps(0);
-      setWeight("");
-      setSession((prev) => {
+      setWeight(0);
+      setErrMsg("");
+      // updating session
+      setCurSession((prev) => {
         return { ...prev, sets: [...prev.sets, response?.data] };
       });
-      setErrMsg("");
       handleCloseForm();
     } catch (err) {
       console.error(err);

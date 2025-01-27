@@ -63,6 +63,12 @@ const handleUpdateSet = async (req, res) => {
     if (set == null) {
       return res.status(404).json({ message: "Cannot find set" });
     }
+    // update session's biggest load.
+    const session = await Session.findById(set.session);
+    if (session.biggestLoad < set.weight) {
+      session.biggestLoad = set.weight;
+    }
+    await session.save();
     return res.status(200).json(set);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -75,6 +81,16 @@ const handleDeleteSet = async (req, res) => {
     if (set == null) {
       return res.status(404).json({ message: "Cannot find set" });
     }
+    // update session's number of sets and biggest load.
+    const session = await Session.findById(set.session);
+    const nextMaxLoad = await Set.find({ session: set.session }).sort({ weight: -1 }).limit(1);
+    session.numSets--;
+    if (nextMaxLoad.length > 0) {
+      session.biggestLoad = nextMaxLoad[0].weight;
+    } else {
+      session.biggestLoad = 0;
+    }
+    await session.save();
     return res.status(200).json(set);
   } catch (err) {
     return res.status(500).json({ message: err.message });
