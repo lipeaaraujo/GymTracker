@@ -4,20 +4,34 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useAuth from "../hooks/useAuth";
 
 const EXERCISE_URL = "/exercise";
+const NAME_REGEX = /^\w+(?: \w+)*$/;
+const DESCRIPTION_REGEX = /^\w+(?: \w+)*$/;
 
 function ExerciseModal({ open, onClose, setExercises }) {
   const axiosPrivate = useAxiosPrivate();
   const { auth } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
 
   const [name, setName] = useState("");
+  const [validName, setValidName] = useState(false);
+
   const [description, setDescription] = useState("");
-  const [formValid, setFormValid] = useState(false);
+  const [validDesc, setValidDesc] = useState(false);
+
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
-    const result = name ? true : false;
-    setFormValid(result);
-  }, [name, description]);
+    setValidName(NAME_REGEX.test(name));
+  }, [name]);
+
+  useEffect(() => {
+    // only test regex if description not empty
+    if (description) {
+      setValidDesc(DESCRIPTION_REGEX.test(description));
+    } else {
+      setValidDesc(true);
+    }
+  }, [description]);
 
   useEffect(() => {
     setErrMsg('');
@@ -33,10 +47,12 @@ function ExerciseModal({ open, onClose, setExercises }) {
     }
 
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.post(
         EXERCISE_URL,
         JSON.stringify({ user: auth.user.id, name, description }),
       )
+      setSubmitting(false);
       setName("");
       setDescription("");
       setExercises(prev => {
@@ -63,6 +79,7 @@ function ExerciseModal({ open, onClose, setExercises }) {
           type="text"
           id="name"
           autoComplete="off"
+          maxLength={50}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -74,10 +91,14 @@ function ExerciseModal({ open, onClose, setExercises }) {
           className="h-32"
           id="description"
           autoComplete="off"
+          maxLength={1000}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <button disabled={!formValid} className="w-full mt-8">
+        <button 
+          disabled={!validName || !validDesc || submitting}
+          className="w-full mt-8"
+        >
           Confirm
         </button>
       </form>

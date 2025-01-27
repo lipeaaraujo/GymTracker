@@ -16,6 +16,7 @@ const EXERCISE_URL = "/exercise";
 function ViewExercise() {
   const { id } = useParams();
   const axiosPrivate = useAxiosPrivate();
+  const [submitting, setSubmitting] = useState(false);
   const { currentExercise, setCurrentExercise } = useExercise();
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,10 +68,12 @@ function ViewExercise() {
 
   const deleteExercise = async () => {
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.delete(
         `${EXERCISE_URL}/${id}`,
       )
       navigate("/");
+      setSubmitting(false);
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -100,6 +103,7 @@ function ViewExercise() {
         title="Delete Exercise"
         message="Are you sure you want to delete this exercise?"
         handleConfirm={deleteExercise}
+        disabled={submitting}
       />
 
       <section className="flex flex-col gap-4 h-full overflow-y-scroll">

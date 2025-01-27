@@ -5,6 +5,8 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const SET_URL = "/set";
+const MAX_REPS = 1000
+const MAX_WEIGHT = 10000
 
 const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
   const [reps, setReps] = useState(0);
@@ -13,6 +15,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
   const [errMsg, setErrMsg] = useState("");
 
   const axiosPrivate = useAxiosPrivate();
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,6 +29,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
     }
 
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.post(
         SET_URL,
         JSON.stringify({
@@ -34,6 +38,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
           weight: weight,
         })
       );
+      setSubmitting(false);
       setReps(0);
       setWeight("");
       setSession((prev) => {
@@ -55,11 +60,11 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
   };
 
   useEffect(() => {
-    if (!reps || reps < 1) {
+    if (!reps || reps < 1 || reps > MAX_REPS) {
       setFormValid(false);
       return;
     }
-    if (!weight || weight <= 0) {
+    if (!weight || weight <= 0 || weight > MAX_WEIGHT) {
       setFormValid(false);
       return;
     }
@@ -78,6 +83,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
         type="number"
         inputMode="numeric"
         min={0}
+        max={MAX_REPS}
         autoComplete="off"
         value={reps}
         onChange={(e) => setReps(e.target.value)}
@@ -89,6 +95,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
         type="number"
         inputMode="numeric"
         min={0}
+        max={MAX_WEIGHT}
         autoComplete="off"
         value={weight}
         onChange={(e) => setWeight(e.target.value)}
@@ -97,11 +104,12 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
       <button
         className="p-1 bg-green-700 hover:bg-green-500 disabled:bg-zinc-700"
         type="submit"
-        disabled={!formValid}
+        disabled={!formValid || submitting}
       >
         <GoChecklist size={28} />
       </button>
       <button
+        disabled={submitting}
         className="p-1 bg-red-700 hover:bg-red-500"
         type="button"
         onClick={handleCloseForm}

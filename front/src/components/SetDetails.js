@@ -9,6 +9,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ConfirmModal from "./ConfirmDeleteModal";
 
 const SET_URL = "/set";
+const MAX_REPS = 1000
+const MAX_WEIGHT = 10000
 
 const SetDetails = ({ set }) => {
   const { curSession, setCurSession } = useSession();
@@ -22,6 +24,7 @@ const SetDetails = ({ set }) => {
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 
   const axiosPrivate = useAxiosPrivate();
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -42,6 +45,7 @@ const SetDetails = ({ set }) => {
     }
 
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.put(
         `${SET_URL}/${set._id}`,
         JSON.stringify({
@@ -50,6 +54,7 @@ const SetDetails = ({ set }) => {
           weight: weight,
         })
       );
+      setSubmitting(false);
       setReps(0);
       setWeight("");
       setCurSession((prev) => {
@@ -98,11 +103,11 @@ const SetDetails = ({ set }) => {
   };
 
   useEffect(() => {
-    if (!reps || reps < 1) {
+    if (!reps || reps < 1 || reps > MAX_REPS) {
       setFormValid(false);
       return;
     }
-    if (!weight || weight <= 0) {
+    if (!weight || weight <= 0 || weight > MAX_WEIGHT) {
       setFormValid(false);
       return;
     }
@@ -131,6 +136,7 @@ const SetDetails = ({ set }) => {
             inputMode="numeric"
             min={0}
             autoComplete="off"
+            max={MAX_REPS}
             value={reps}
             onChange={(e) => setReps(e.target.value)}
           />
@@ -142,6 +148,7 @@ const SetDetails = ({ set }) => {
             inputMode="numeric"
             min={0}
             autoComplete="off"
+            max={MAX_WEIGHT}
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
           />
@@ -149,11 +156,12 @@ const SetDetails = ({ set }) => {
           <button
             className="p-1 bg-green-700 hover:bg-green-500 disabled:bg-zinc-700"
             type="submit"
-            disabled={!formValid}
+            disabled={!formValid || submitting}
           >
             <GoChecklist size={28} />
           </button>
           <button
+            disabled={submitting}
             className="p-1 bg-red-700 hover:bg-red-500"
             type="button"
             onClick={() => setEditing(false)}

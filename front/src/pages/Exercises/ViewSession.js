@@ -25,6 +25,7 @@ const ViewSession = () => {
   const [errMsg, setErrMsg] = useState("");
 
   const axiosPrivate = useAxiosPrivate();
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -68,9 +69,11 @@ const ViewSession = () => {
 
   const deleteSession = async () => {
     try {
+      setSubmitting(true);
       const response = await axiosPrivate.delete(
         `${SESSIONS_URL}/${id}`
       )
+      setSubmitting(false)
       navigate(`/exercise/${currentExercise._id}`);
     } catch (err) {
       if (!err?.response) {
@@ -104,6 +107,7 @@ const ViewSession = () => {
       title="Delete Session"
       message="Are you sure you want to delete this session?"
       handleConfirm={deleteSession}
+      disabled={submitting}
     />
     <section className="flex flex-col h-full gap-4 overflow-y-scroll">
       <SectionHeader

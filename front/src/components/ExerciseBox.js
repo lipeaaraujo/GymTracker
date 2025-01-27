@@ -11,12 +11,17 @@ function ExerciseBox({ icon, id, name }) {
   return (
     <button
       onClick={ViewExercise}
-      className="bg-zinc-700 w-32 h-32 rounded-xl hover:bg-zinc-600 duration-300 flex flex-col items-center justify-center"
+      className="bg-zinc-700 w-32 h-32 rounded-xl hover:bg-zinc-600
+                 duration-300 flex flex-col items-center justify-center"
     >
-      <IconContext.Provider value={{ size: 40 }}>
-        {icon}
+      <section>
+        <IconContext.Provider value={{ size: 40 }}>
+          {icon}
+        </IconContext.Provider>
+      </section>
+      <p className="w-full text-ellipsis overflow-hidden">
         {name}
-      </IconContext.Provider>
+      </p>
     </button>
   );
 }

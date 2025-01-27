@@ -112,6 +112,7 @@ function Register() {
           id="username"
           ref={userRef}
           autoComplete="off"
+          maxLength={24}
           onChange={(e) => setName(e.target.value)}
           aria-invalid={validName ? "false" : "true"}
           aria-describedby="namenote"
@@ -137,6 +138,7 @@ function Register() {
           type="email"
           id="email"
           autoComplete="off"
+          maxLength={50}
           onChange={(e) => setEmail(e.target.value)}
           aria-invalid={validEmail ? "false" : "true"}
           aria-describedby="emailnote"
@@ -159,6 +161,7 @@ function Register() {
         <input
           type="password"
           id="password"
+          maxLength={28}
           onChange={(e) => setPassword(e.target.value)}
           aria-invalid={validPwd ? "false" : "true"}
           aria-describedby="pwdnote"
@@ -185,6 +188,7 @@ function Register() {
         <input
           type="password"
           id="confirm-password"
+          maxLength={28}
           onChange={(e) => setMatchPwd(e.target.value)}
           aria-invalid={validMatch ? "false" : "true"}
           aria-describedby="matchnote"

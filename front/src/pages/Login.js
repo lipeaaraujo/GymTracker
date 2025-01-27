@@ -82,6 +82,7 @@ function Login() {
           type="text"
           id="email"
           ref={userRef}
+          maxLength={100}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -93,6 +94,7 @@ function Login() {
           type="password"
           id="password"
           ref={userRef}
+          maxLength={28}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
