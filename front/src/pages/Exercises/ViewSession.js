@@ -12,6 +12,7 @@ import EditSessionModal from "../../components/session/EditSessionModal";
 import ConfirmModal from "../../components/ConfirmDeleteModal";
 import useExercise from "../../hooks/useExercise";
 import SetDetails from "../../components/sets/SetDetails";
+import SessionInfo from "../../components/exercises/SessionInfo";
 
 const SESSIONS_URL = "/session";
 
@@ -139,26 +140,11 @@ const ViewSession = () => {
         errMsg={errMsg}
       />
       {curSession?.date && (
-        <article className="w-full flex flex-col justify-center gap-2">
-          <section className="w-fit flex items-center gap-1">
-            <CiCalendar size={28} />
-            <p>
-              <b>Date:</b> {formattedDate}
-            </p>
-          </section>
-          <section className="w-fit flex items-center gap-1">
-            <GiWeightLiftingUp size={28} />
-            <p>
-              <b>Sets:</b> {numSets}
-            </p>
-          </section>
-          <section className="w-fit flex items-center gap-1">
-            <GiWeight size={28} />
-            <p>
-              <b>Biggest Load:</b> {maxLoad} kg
-            </p>
-          </section>
-        </article>
+        <SessionInfo 
+          date={formattedDate}
+          maxLoad={maxLoad}
+          numSets={numSets}
+        />
       )}
       {curSession?.date && (
         <article className="flex flex-col items-center gap-2">

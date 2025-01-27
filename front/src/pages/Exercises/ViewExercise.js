@@ -10,6 +10,7 @@ import useExercise from "../../hooks/useExercise";
 import SectionHeader from "../../components/SectionHeader";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import EditExerciseModal from "../../components/exercises/EditExerciseModal";
+import ExerciseInfo from "../../components/exercises/ExerciseInfo";
 
 const EXERCISE_URL = "/exercise";
 
@@ -115,17 +116,11 @@ function ViewExercise() {
           errMsg={errMsg}
         />
         {currentExercise?.name && (
-          <article className="flex flex-col gap-2">
-            <header className="w-full flex justify-center items-center gap-2">
-              <CgGym size={28} />
-              <h2>{currentExercise.name}</h2>
-            </header>
-            <section className="w-full flex justify-center">
-              <p className="bg-neutral-900 w-96 p-2 rounded-xl text-wrap break-words">
-                <b>Description:</b> {currentExercise.description}
-              </p>
-            </section>
-          </article>
+          <ExerciseInfo 
+            name={currentExercise.name}
+            description={currentExercise.description}
+            personalBest={0 }
+          />
         )}
         {currentExercise?.name && (
           <article className="flex flex-col gap-2">
