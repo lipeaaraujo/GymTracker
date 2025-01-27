@@ -9,6 +9,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ConfirmModal from "./ConfirmDeleteModal";
 
 const SET_URL = "/set";
+const MAX_REPS = 1000
+const MAX_WEIGHT = 10000
 
 const SetDetails = ({ set }) => {
   const { curSession, setCurSession } = useSession();
@@ -98,11 +100,11 @@ const SetDetails = ({ set }) => {
   };
 
   useEffect(() => {
-    if (!reps || reps < 1) {
+    if (!reps || reps < 1 || reps > MAX_REPS) {
       setFormValid(false);
       return;
     }
-    if (!weight || weight <= 0) {
+    if (!weight || weight <= 0 || weight > MAX_WEIGHT) {
       setFormValid(false);
       return;
     }
@@ -131,6 +133,7 @@ const SetDetails = ({ set }) => {
             inputMode="numeric"
             min={0}
             autoComplete="off"
+            max={MAX_REPS}
             value={reps}
             onChange={(e) => setReps(e.target.value)}
           />
@@ -142,6 +145,7 @@ const SetDetails = ({ set }) => {
             inputMode="numeric"
             min={0}
             autoComplete="off"
+            max={MAX_WEIGHT}
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
           />

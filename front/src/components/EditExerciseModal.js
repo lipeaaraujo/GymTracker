@@ -5,25 +5,38 @@ import useAuth from "../hooks/useAuth";
 import useExercise from "../hooks/useExercise";
 
 const EXERCISE_URL = "/exercise";
+const NAME_REGEX = /^\w+(?: \w+)*$/;
+const DESCRIPTION_REGEX = /^\w+(?: \w+)*$/;
 
 function EditExerciseModal({ open, onClose }) {
   const axiosPrivate = useAxiosPrivate();
   const { auth } = useAuth();
   const { currentExercise, setCurrentExercise } = useExercise();
+
   const [name, setName] = useState("");
+  const [validName, setValidName] = useState(false);
+
   const [description, setDescription] = useState("");
-  const [formValid, setFormValid] = useState(false);
+  const [validDesc, setValidDesc] = useState(false);
+  
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
     setName(currentExercise?.name);
     setDescription(currentExercise?.description);
-  }, [currentExercise])
+  }, [currentExercise]);
 
   useEffect(() => {
-    const result = name ? true : false;
-    setFormValid(result);
-  }, [name, description]);
+    setValidName(NAME_REGEX.test(name));
+  }, [name]);
+
+  useEffect(() => {
+    if (description) {
+      setValidDesc(DESCRIPTION_REGEX.test(description))
+    } else {
+      setValidDesc(true)
+    }
+  }, [description]);
 
   useEffect(() => {
     setErrMsg('');
@@ -70,6 +83,7 @@ function EditExerciseModal({ open, onClose }) {
           type="text"
           id="name"
           autoComplete="off"
+          maxLength={50}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -81,10 +95,14 @@ function EditExerciseModal({ open, onClose }) {
           className="h-32"
           id="description"
           autoComplete="off"
+          maxLength={1000}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <button disabled={!formValid} className="w-full mt-8">
+        <button 
+          disabled={!validName || !validDesc}
+          className="w-full mt-8"
+        >
           Confirm
         </button>
       </form>

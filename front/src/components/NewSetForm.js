@@ -5,6 +5,8 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const SET_URL = "/set";
+const MAX_REPS = 1000
+const MAX_WEIGHT = 10000
 
 const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
   const [reps, setReps] = useState(0);
@@ -55,11 +57,11 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
   };
 
   useEffect(() => {
-    if (!reps || reps < 1) {
+    if (!reps || reps < 1 || reps > MAX_REPS) {
       setFormValid(false);
       return;
     }
-    if (!weight || weight <= 0) {
+    if (!weight || weight <= 0 || weight > MAX_WEIGHT) {
       setFormValid(false);
       return;
     }
@@ -78,6 +80,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
         type="number"
         inputMode="numeric"
         min={0}
+        max={MAX_REPS}
         autoComplete="off"
         value={reps}
         onChange={(e) => setReps(e.target.value)}
@@ -89,6 +92,7 @@ const NewSetForm = ({ sessionId, setSession, handleCloseForm }) => {
         type="number"
         inputMode="numeric"
         min={0}
+        max={MAX_WEIGHT}
         autoComplete="off"
         value={weight}
         onChange={(e) => setWeight(e.target.value)}
