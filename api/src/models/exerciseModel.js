@@ -16,10 +16,21 @@ const ExerciseSchema = new mongoose.Schema({
   description: {
     type: String
   },
-  personalBest: {
-    type: Number
-  },
   sessions: [{ type:mongoose.Schema.Types.ObjectId, ref: "Session" }]
+}, {
+  toJSON: {
+    virtuals: true,
+  }
+});
+
+// virtual properties
+ExerciseSchema.virtual('personalBest').get(async function() {
+  const maxSession = await Session.find({ exercise: this._id }).sort({ biggestLoad: -1 }).limit(1);
+  if (maxSession.length > 0) {
+    return maxSession[0].biggestLoad;
+  } else {
+    return 0;
+  }
 });
 
 // clean up all exercise sessions on delete

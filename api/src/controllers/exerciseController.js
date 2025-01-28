@@ -14,10 +14,12 @@ const getAllExercises = async (req, res) => {
 const getExerciseById = async (req, res) => {
   try {
     const exercise = await Exercise.findById(req.params.id);
+    // get personal best.
+    const personalBest = await exercise.personalBest;
     if (exercise == null) {
       return res.status(404).json({ message: "Cannot find exercise" });
     }
-    return res.status(200).json(exercise);
+    return res.status(200).json({ ...exercise.toJSON(), personalBest });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -25,15 +27,18 @@ const getExerciseById = async (req, res) => {
 
 const getExerciseAndSessions = async (req, res) => {
   try {
-    const exercise = await Exercise.findById(req.params.id);
+    const exercise = await Exercise.findById(req.params.id).populate("sessions");
+    console.log(exercise);
     if (exercise == null) {
       return res.status(404).json({ message: "Cannot find exercise" });
     }
 
+    // populate sessions and return personal best.
     const sessions = await Session.find({ exercise: req.params.id });
+    const personalBest = await exercise.personalBest;
 
     exercise.sessions = sessions;
-    return res.status(200).json(exercise);
+    return res.status(200).json({ ...exercise.toJSON(), personalBest });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
