@@ -79,7 +79,7 @@ const ViewSession = () => {
         `${SESSIONS_URL}/${id}`
       )
       setSubmitting(false)
-      navigate(`/exercise/${currentExercise._id}`);
+      navigate(-1);
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");

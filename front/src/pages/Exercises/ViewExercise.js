@@ -74,7 +74,7 @@ function ViewExercise() {
       await axiosPrivate.delete(
         `${EXERCISE_URL}/${id}`,
       )
-      navigate("/");
+      navigate(-1);
       setSubmitting(false);
     } catch (err) {
       if (!err?.response) {

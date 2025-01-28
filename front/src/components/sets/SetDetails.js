@@ -82,7 +82,7 @@ const SetDetails = ({ set }) => {
 
   const deleteSet = async () => {
     try {
-      const response = await axiosPrivate.delete(
+      await axiosPrivate.delete(
         `${SET_URL}/${setId}`,
       )
       setCurSession(prev => ({
