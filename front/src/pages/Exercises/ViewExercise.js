@@ -71,7 +71,7 @@ function ViewExercise() {
   const deleteExercise = async () => {
     try {
       setSubmitting(true);
-      const response = await axiosPrivate.delete(
+      await axiosPrivate.delete(
         `${EXERCISE_URL}/${id}`,
       )
       navigate("/");

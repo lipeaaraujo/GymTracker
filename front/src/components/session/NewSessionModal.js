@@ -32,8 +32,13 @@ function SessionModal({ open, onClose }) {
       );
       setSubmitting(false);
       setDate("");
+      const newSession = {
+        ...response?.data,
+        numSets: 0,
+        biggestLoad: 0,
+      }
       setCurrentExercise(prev => {
-        return {...prev, sessions: [...prev.sessions, response?.data]};
+        return {...prev, sessions: [...prev.sessions, newSession]};
       });
       onClose()
     } catch (err) {

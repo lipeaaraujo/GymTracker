@@ -33,15 +33,15 @@ const EditSessionModal = ({ open, onClose }) => {
     e.preventDefault();
     try {
       setSubmitting(true);
-      const response = await axiosPrivate.put(
+      await axiosPrivate.put(
         `${SESSIONS_URL}/${curSession._id}`,
         JSON.stringify({ exercise: currentExercise._id, date })
       );
       setSubmitting(false);
       setDate("");
       setCurSession(prev => ({
-        ...response?.data,
-        sets: prev.sets,
+        ...prev,
+        date: date,
       }));
       onClose()
     } catch (err) {

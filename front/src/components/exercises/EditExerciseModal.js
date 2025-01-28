@@ -58,13 +58,15 @@ function EditExerciseModal({ open, onClose }) {
         `${EXERCISE_URL}/${currentExercise._id}`,
         JSON.stringify({ user: auth.user.id, name, description }),
       )
-      setSubmitting(true);
+      setSubmitting(false);
+      // updating current exercise
+      setCurrentExercise(prev => ({ 
+        ...prev,
+        name: name,
+        description: description,
+      }));
       setName("");
       setDescription("");
-      setCurrentExercise(prev => ({ 
-        ...response?.data,
-        sessions: prev.sessions, // retain the sessions from the current exercise
-      }));
       onClose();
     } catch (err) {
       if (!err?.response) {
