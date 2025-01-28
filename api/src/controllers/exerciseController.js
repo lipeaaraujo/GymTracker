@@ -27,18 +27,28 @@ const getExerciseById = async (req, res) => {
 
 const getExerciseAndSessions = async (req, res) => {
   try {
-    const exercise = await Exercise.findById(req.params.id).populate("sessions");
-    console.log(exercise);
+    const exercise = await Exercise.findById(req.params.id);
     if (exercise == null) {
       return res.status(404).json({ message: "Cannot find exercise" });
     }
+    // get personal best
+    const personalBest = await exercise.getPersonalBest();
 
-    // populate sessions and return personal best.
-    const sessions = await Session.find({ exercise: req.params.id });
-    const personalBest = await exercise.personalBest;
+    // populate sessions and get number of sets for each.
+    const sessions = await Session.aggregate([
+      { $match: { 'exercise': exercise._id } },
+      { $lookup: { from: 'sets', localField: '_id', foreignField: 'session', as: 'sets' } },
+      { $addFields: { numSets: { $size: '$sets' } } },
+      { $project: { sets: 0 } },
+    ]);
 
-    exercise.sessions = sessions;
-    return res.status(200).json({ ...exercise.toJSON(), personalBest });
+    const response = {
+      ...exercise.toObject(),
+      personalBest,
+      sessions,
+    };
+
+    return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

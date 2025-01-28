@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 // model imports
 const Session = require("./sessionModel");
+const Set = require("./setModel");
 
 const ExerciseSchema = new mongoose.Schema({
   user: {
@@ -18,18 +19,19 @@ const ExerciseSchema = new mongoose.Schema({
   },
   sessions: [{ type:mongoose.Schema.Types.ObjectId, ref: "Session" }]
 }, {
+  methods: {
+    async getPersonalBest() {
+      const personalBestSet = await Set.aggregate([
+        { $lookup: { from: 'sessions', localField: 'session', foreignField: '_id', as: 'sessionDetails' } },
+        { $match: { 'sessionDetails.exercise': this._id } },
+        { $sort: { weight: -1 } },
+        { $limit: 1 }
+      ])
+      return personalBestSet.length ? personalBestSet[0].weight : 0;
+    }
+  },
   toJSON: {
     virtuals: true,
-  }
-});
-
-// virtual properties
-ExerciseSchema.virtual('personalBest').get(async function() {
-  const maxSession = await Session.find({ exercise: this._id }).sort({ biggestLoad: -1 }).limit(1);
-  if (maxSession.length > 0) {
-    return maxSession[0].biggestLoad;
-  } else {
-    return 0;
   }
 });
 

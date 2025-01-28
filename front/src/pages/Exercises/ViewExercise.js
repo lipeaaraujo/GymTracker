@@ -39,6 +39,7 @@ function ViewExercise() {
             signal: controller.signal,
           }
         );
+        console.log(response?.data);
         isMounted && setCurrentExercise(response?.data);
         isMounted && setErrMsg("");
       } catch (err) {
@@ -119,7 +120,7 @@ function ViewExercise() {
           <ExerciseInfo 
             name={currentExercise.name}
             description={currentExercise.description}
-            personalBest={0 }
+            personalBest={currentExercise.personalBest}
           />
         )}
         {currentExercise?.name && (

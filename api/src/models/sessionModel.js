@@ -9,20 +9,25 @@ const SessionSchema = new mongoose.Schema({
     ref: "Exercise",
     required: true,
   },
-  numSets: {
-    type: Number,
-    default: 0,
-  },
   date: {
     type: Date,
     default: Date.now,
     required: true,
   },
-  biggestLoad: {
-    type: Number,
-    default: 0,
-  },
   sets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Set" }],
+}, {
+  methods: {
+    async getNumSets() {
+      const sets = await Set.find({ session: this._id });
+      return sets.length;
+    },
+    async getBiggestLoad() {
+      const maxSet = await Set.find({ session: this._id })
+                              .sort({ weight: -1 })
+                              .limit(1);
+      return maxSet.length ? maxSet[0].weight : 0;
+    }
+  }
 });
 
 // clean up all session sets on delete

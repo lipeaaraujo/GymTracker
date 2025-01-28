@@ -35,7 +35,10 @@ const getSessionById = async (req, res) => {
     if (session == null) {
       return res.status(404).json({ message: "Cannot find session" });
     }
-    return res.status(200).json(session);
+    const numSets = await session.getNumSets();
+    const biggestLoad = await session.getBiggestLoad();
+
+    return res.status(200).json({ ...session.toJSON(), numSets, biggestLoad });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -43,15 +46,17 @@ const getSessionById = async (req, res) => {
 
 const getSessionByIdAndSets = async (req, res) => {
   try {
-    const sets = await Set.find({ session: req.params.id });
-
     const session = await Session.findById(req.params.id);
     if (session == null) {
       return res.status(404).json({ message: "Cannot find session" });
     }
+    const numSets = await session.getNumSets();
+    const biggestLoad = await session.getBiggestLoad();
 
+    const sets = await Set.find({ session: req.params.id });
     session.sets = sets;
-    return res.status(200).json(session);
+
+    return res.status(200).json({ ...session.toJSON(), numSets, biggestLoad });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
