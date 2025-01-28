@@ -4,8 +4,8 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 
 const EXERCISE_URL = "/exercise";
-const NAME_REGEX = /^\w+(?: \w+)*$/;
-const DESCRIPTION_REGEX = /^\w+(?: \w+)*$/;
+const NAME_REGEX = /^\S+(?: \S+)*$/;
+const DESCRIPTION_REGEX = /^\S+(?: \S+)*$/;
 
 function ExerciseModal({ open, onClose, setExercises }) {
   const axiosPrivate = useAxiosPrivate();
