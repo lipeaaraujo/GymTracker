@@ -23,8 +23,8 @@ function EditExerciseModal({ open, onClose }) {
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
-    setName(currentExercise?.name);
-    setDescription(currentExercise?.description);
+    setName(currentExercise?.name || "");
+    setDescription(currentExercise?.description || "");
   }, [currentExercise]);
 
   useEffect(() => {

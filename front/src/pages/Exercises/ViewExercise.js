@@ -39,11 +39,9 @@ function ViewExercise() {
             signal: controller.signal,
           }
         );
-        console.log(response?.data);
         isMounted && setCurrentExercise(response?.data);
         isMounted && setErrMsg("");
       } catch (err) {
-        console.error(err);
         if (!isMounted) return;
         if (!err?.response) {
           setErrMsg("No Server Response");

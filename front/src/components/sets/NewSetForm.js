@@ -42,14 +42,19 @@ const NewSetForm = ({ handleCloseForm }) => {
         })
       );
       setSubmitting(false);
-      // resetting form
+
+      // updating session
+      setCurSession((prev) => ({
+        ...prev,
+        numSets: prev.numSets+1,
+        biggestLoad: weight > prev.biggestLoad ? weight : prev.biggestLoad,
+        sets: [...prev.sets, response?.data]
+      }));
+
+      // clearing form
       setReps(0);
       setWeight(0);
       setErrMsg("");
-      // updating session
-      setCurSession((prev) => {
-        return { ...prev, sets: [...prev.sets, response?.data] };
-      });
       handleCloseForm();
     } catch (err) {
       console.error(err);

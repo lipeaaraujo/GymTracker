@@ -32,7 +32,6 @@ function Exercises() {
             signal: controller.signal,
           }
         );
-        console.log(exercises);
         isMounted && setExercises(response?.data);
         isMounted && setErrMsg("");
       } catch (err) {

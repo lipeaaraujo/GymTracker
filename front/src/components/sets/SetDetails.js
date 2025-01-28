@@ -55,16 +55,19 @@ const SetDetails = ({ set }) => {
         })
       );
       setSubmitting(false);
+
+      // updating session
+      setCurSession((prev) => ({
+        ...prev,
+        biggestLoad: weight > prev.biggestLoad ? weight : prev.biggestLoad,
+        sets: prev.sets.map((s) =>
+          s._id === response?.data?._id ? response?.data : s
+        ),
+      }));
+
+      // clearing form
       setReps(0);
-      setWeight("");
-      setCurSession((prev) => {
-        return {
-          ...prev,
-          sets: prev.sets.map((s) =>
-            s._id === response?.data?._id ? response?.data : s
-          ),
-        };
-      });
+      setWeight(0);
       setErrMsg("");
       setEditing(false);
     } catch (err) {
@@ -85,9 +88,17 @@ const SetDetails = ({ set }) => {
       await axiosPrivate.delete(
         `${SET_URL}/${setId}`,
       )
+      // updating current session
       setCurSession(prev => ({
         ...prev,
+        numSets: prev.numSets-1,
         sets: prev.sets.filter(set => set._id !== setId),
+      }))
+      setCurSession(prev => ({
+        ...prev,
+        biggestLoad: prev.sets?.reduce((last, cur) => (
+          last && last._id !== setId && last.weight > cur.weight ? last : cur
+        ), 0)?.weight || 0,
       }))
       setConfirmDeleteModal(false);
     } catch (err) {

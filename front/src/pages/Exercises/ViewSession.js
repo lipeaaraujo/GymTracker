@@ -18,10 +18,7 @@ const SESSIONS_URL = "/session";
 
 const ViewSession = () => {
   const { id } = useParams();
-  const { currentExercise } = useExercise();
   const { curSession, setCurSession } = useSession();
-  const [numSets, setNumSets] = useState(0);
-  const [maxLoad, setMaxLoad] = useState(0);
   const [formattedDate, setFormattedDate] = useState();
   const [errMsg, setErrMsg] = useState("");
 
@@ -45,13 +42,9 @@ const ViewSession = () => {
         const response = await axiosPrivate.get(`${SESSIONS_URL}/${id}/sets`, {
           signal: controller.signal,
         });
-        console.log(response?.data);
         setCurSession(response?.data);
-        setNumSets(curSession.numSets);
-        setMaxLoad(curSession.biggestLoad);
         setErrMsg("");
       } catch (err) {
-        console.error(err);
         if (!isMounted) return;
         if (!err?.response) {
           setErrMsg("No Server Response");
@@ -95,25 +88,25 @@ const ViewSession = () => {
   // updates number of sets and max load 
   // when an operation is made with the sets.
   useEffect(() => {
-    const updateNumSetsAndLoad = () => {
-      if (curSession?.sets) {
-        // updating number of sets
-        setNumSets(curSession.sets.length);
-        // find set with the biggest load
-        let maxLoad = 0;
-        curSession.sets.forEach(set => {
-          if (set.weight > maxLoad) maxLoad = set.weight;
-        });
-        setMaxLoad(maxLoad);
-      } else {
-        curSession.numSets = 0;
-        curSession.biggestLoad = 0;
-      }
-    }
+    // const updateNumSetsAndLoad = () => {
+    //   if (curSession?.sets) {
+    //     // updating number of sets
+    //     setNumSets(curSession.sets.length);
+    //     // find set with the biggest load
+    //     let maxLoad = 0;
+    //     curSession.sets.forEach(set => {
+    //       if (set.weight > maxLoad) maxLoad = set.weight;
+    //     });
+    //     setMaxLoad(maxLoad);
+    //   } else {
+    //     curSession.numSets = 0;
+    //     curSession.biggestLoad = 0;
+    //   }
+    // }
     const updateDate = () => {
       curSession?.date && setFormattedDate(formatDate(curSession?.date));
     }
-    updateNumSetsAndLoad();
+    // updateNumSetsAndLoad();
     updateDate();
   }, [curSession, setCurSession]);
 
@@ -142,8 +135,8 @@ const ViewSession = () => {
       {curSession?.date && (
         <SessionInfo 
           date={formattedDate}
-          maxLoad={maxLoad}
-          numSets={numSets}
+          maxLoad={curSession.biggestLoad}
+          numSets={curSession.numSets}
         />
       )}
       {curSession?.date && (
