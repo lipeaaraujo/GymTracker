@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
 import { FaPlus, FaWeightHanging } from "react-icons/fa";
-import { CiCalendar, CiEdit, CiTrash } from "react-icons/ci";
+import { CiCalendar } from "react-icons/ci";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { formatDate } from "../../utils/dateUtils";
 import { GiWeight, GiWeightLiftingUp } from "react-icons/gi";
-import NewSetForm from "../../components/NewSetForm";
+import NewSetForm from "../../components/sets/NewSetForm";
 import SectionHeader from "../../components/SectionHeader";
 import useSession from "../../hooks/useSession";
-import EditSessionModal from "../../components/EditSessionModal";
+import EditSessionModal from "../../components/session/EditSessionModal";
 import ConfirmModal from "../../components/ConfirmDeleteModal";
 import useExercise from "../../hooks/useExercise";
-import SetDetails from "../../components/SetDetails";
+import SetDetails from "../../components/sets/SetDetails";
+import SessionInfo from "../../components/exercises/SessionInfo";
 
 const SESSIONS_URL = "/session";
 
 const ViewSession = () => {
   const { id } = useParams();
-  const { currentExercise } = useExercise();
   const { curSession, setCurSession } = useSession();
-  const [numSets, setNumSets] = useState(0);
-  const [personalBest, setPersonalBest] = useState(0); // remove later
   const [formattedDate, setFormattedDate] = useState();
   const [errMsg, setErrMsg] = useState("");
 
@@ -34,6 +32,7 @@ const ViewSession = () => {
 
   const [addingSet, setAddingSet] = useState(false);
 
+  // fetches session data
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
@@ -46,7 +45,6 @@ const ViewSession = () => {
         setCurSession(response?.data);
         setErrMsg("");
       } catch (err) {
-        console.error(err);
         if (!isMounted) return;
         if (!err?.response) {
           setErrMsg("No Server Response");
@@ -70,11 +68,11 @@ const ViewSession = () => {
   const deleteSession = async () => {
     try {
       setSubmitting(true);
-      const response = await axiosPrivate.delete(
+      await axiosPrivate.delete(
         `${SESSIONS_URL}/${id}`
       )
       setSubmitting(false)
-      navigate(`/exercise/${currentExercise._id}`);
+      navigate(-1);
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -87,13 +85,30 @@ const ViewSession = () => {
     }
   }
 
+  // updates number of sets and max load 
+  // when an operation is made with the sets.
   useEffect(() => {
-    curSession?.date && setFormattedDate(formatDate(curSession?.date));
-    if (curSession?.sets) {
-      setNumSets(curSession.sets.length);
-      setPersonalBest(Math.max(...curSession.sets.map((set) => set.weight)));
+    // const updateNumSetsAndLoad = () => {
+    //   if (curSession?.sets) {
+    //     // updating number of sets
+    //     setNumSets(curSession.sets.length);
+    //     // find set with the biggest load
+    //     let maxLoad = 0;
+    //     curSession.sets.forEach(set => {
+    //       if (set.weight > maxLoad) maxLoad = set.weight;
+    //     });
+    //     setMaxLoad(maxLoad);
+    //   } else {
+    //     curSession.numSets = 0;
+    //     curSession.biggestLoad = 0;
+    //   }
+    // }
+    const updateDate = () => {
+      curSession?.date && setFormattedDate(formatDate(curSession?.date));
     }
-  }, [curSession]);
+    // updateNumSetsAndLoad();
+    updateDate();
+  }, [curSession, setCurSession]);
 
   return (
     <>
@@ -118,26 +133,11 @@ const ViewSession = () => {
         errMsg={errMsg}
       />
       {curSession?.date && (
-        <article className="w-full flex flex-col justify-center gap-2">
-          <section className="w-fit flex items-center gap-1">
-            <CiCalendar size={28} />
-            <p>
-              <b>Date:</b> {formattedDate}
-            </p>
-          </section>
-          <section className="w-fit flex items-center gap-1">
-            <GiWeightLiftingUp size={28} />
-            <p>
-              <b>Sets:</b> {numSets}
-            </p>
-          </section>
-          <section className="w-fit flex items-center gap-1">
-            <GiWeight size={28} />
-            <p>
-              <b>Personal Best:</b> {personalBest} kg
-            </p>
-          </section>
-        </article>
+        <SessionInfo 
+          date={formattedDate}
+          maxLoad={curSession.biggestLoad}
+          numSets={curSession.numSets}
+        />
       )}
       {curSession?.date && (
         <article className="flex flex-col items-center gap-2">
@@ -146,9 +146,7 @@ const ViewSession = () => {
             <h2>Sets:</h2>
           </header>
           {curSession.sets.map((set) => (
-            <SetDetails 
-              set={set}
-            />
+            <SetDetails key={set._id} set={set} />
           ))}
 
           {addingSet && (

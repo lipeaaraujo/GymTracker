@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import useExercise from "../hooks/useExercise";
+import Modal from "../Modal";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useExercise from "../../hooks/useExercise";
 import { useLocation, useNavigate } from "react-router-dom";
-import useSession from "../hooks/useSession";
-import { formatDateToYMD } from "../utils/dateUtils";
 
 const SESSIONS_URL = "/session";
 
-const EditSessionModal = ({ open, onClose }) => {
-  const { currentExercise } = useExercise();
-  const { curSession, setCurSession } = useSession();
+function SessionModal({ open, onClose }) {
+  const { currentExercise, setCurrentExercise } = useExercise();
   const axiosPrivate = useAxiosPrivate();
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -21,10 +18,6 @@ const EditSessionModal = ({ open, onClose }) => {
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
-    curSession?.date && setDate(formatDateToYMD(curSession?.date));
-  }, [curSession])
-
-  useEffect(() => {
     const result = date ? true : false;
     setFormValid(result);
   }, [date]);
@@ -33,16 +26,20 @@ const EditSessionModal = ({ open, onClose }) => {
     e.preventDefault();
     try {
       setSubmitting(true);
-      const response = await axiosPrivate.put(
-        `${SESSIONS_URL}/${curSession._id}`,
+      const response = await axiosPrivate.post(
+        SESSIONS_URL,
         JSON.stringify({ exercise: currentExercise._id, date })
       );
       setSubmitting(false);
       setDate("");
-      setCurSession(prev => ({
+      const newSession = {
         ...response?.data,
-        sets: prev.sets,
-      }));
+        numSets: 0,
+        biggestLoad: 0,
+      }
+      setCurrentExercise(prev => {
+        return {...prev, sessions: [...prev.sessions, newSession]};
+      });
       onClose()
     } catch (err) {
       console.error(err);
@@ -58,7 +55,7 @@ const EditSessionModal = ({ open, onClose }) => {
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={"Edit Session"}>
+    <Modal open={open} onClose={onClose} title={"New Session"}>
       <p className={errMsg ? "w-full bg-red-800 p-1 rounded-lg" : "hidden"}>{errMsg}</p>
       <form className="flex flex-col w-56" onSubmit={handleSubmit}>
         <label htmlFor="date">Date:</label>
@@ -81,4 +78,4 @@ const EditSessionModal = ({ open, onClose }) => {
   );
 }
 
-export default EditSessionModal;
+export default SessionModal;

@@ -1,5 +1,6 @@
 // model import
 const Set = require("../models/setModel");
+const Session = require("../models/sessionModel");
 
 const getAllSets = async (req, res) => {
   try {
@@ -28,7 +29,9 @@ const handleCreateSet = async (req, res) => {
     numReps: req.body.numReps,
     weight: req.body.weight,
   });
+
   try {
+    // save the new set.
     await set.save();
     return res.status(201).json(set);
   } catch (err) {
@@ -64,6 +67,7 @@ const handleDeleteSet = async (req, res) => {
     if (set == null) {
       return res.status(404).json({ message: "Cannot find set" });
     }
+    // update session's number of sets and biggest load.
     return res.status(200).json(set);
   } catch (err) {
     return res.status(500).json({ message: err.message });

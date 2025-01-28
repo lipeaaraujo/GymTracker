@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import useAuth from "../hooks/useAuth";
-import useExercise from "../hooks/useExercise";
+import Modal from "../Modal";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAuth from "../../hooks/useAuth";
+import useExercise from "../../hooks/useExercise";
 
 const EXERCISE_URL = "/exercise";
-const NAME_REGEX = /^\w+(?: \w+)*$/;
-const DESCRIPTION_REGEX = /^\w+(?: \w+)*$/;
+const NAME_REGEX = /^\S+(?: \S+)*$/;
+const DESCRIPTION_REGEX = /^\S+(?: \S+)*$/;
 
 function EditExerciseModal({ open, onClose }) {
   const axiosPrivate = useAxiosPrivate();
@@ -23,8 +23,8 @@ function EditExerciseModal({ open, onClose }) {
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
-    setName(currentExercise?.name);
-    setDescription(currentExercise?.description);
+    setName(currentExercise?.name || "");
+    setDescription(currentExercise?.description || "");
   }, [currentExercise]);
 
   useEffect(() => {
@@ -58,13 +58,15 @@ function EditExerciseModal({ open, onClose }) {
         `${EXERCISE_URL}/${currentExercise._id}`,
         JSON.stringify({ user: auth.user.id, name, description }),
       )
-      setSubmitting(true);
+      setSubmitting(false);
+      // updating current exercise
+      setCurrentExercise(prev => ({ 
+        ...prev,
+        name: name,
+        description: description,
+      }));
       setName("");
       setDescription("");
-      setCurrentExercise(prev => ({ 
-        ...response?.data,
-        sessions: prev.sessions, // retain the sessions from the current exercise
-      }));
       onClose();
     } catch (err) {
       if (!err?.response) {
