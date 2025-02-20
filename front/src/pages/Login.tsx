@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { AuthType } from "../types/user.types";
+import { AuthType, LoginUserType } from "../types/user.types";
 import { toast } from "react-toastify";
 
 const LOGIN_URL = "/login";
@@ -35,10 +35,15 @@ function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    const user: LoginUserType = {
+      email,
+      password
+    }
+
     try {
       const response = await axios.post(
         LOGIN_URL,
-        { email, password },
+        JSON.stringify(user),
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
@@ -51,16 +56,14 @@ function Login() {
       navigate(from, { replace: true })
     } catch (err) {
       console.error(err);
-      toast.error("Error logging in");
+      toast.error("Error logging in, check your credentials");
     }
   }
 
-  useEffect(() => {
-    localStorage.setItem("persist", `${persist}`);
-  }, [persist])
 
   const togglePersist = () => {
     setPersist(!persist);
+    localStorage.setItem("persist", `${persist}`);
   }
 
   const navigateRegister = () => {
