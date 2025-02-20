@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import Container from "@mui/material/Container"
-import { ToastContainer } from "react-toastify";
 
 const Layout = () => {
   return (
@@ -10,7 +9,6 @@ const Layout = () => {
       }}
     >
       <Outlet />
-      <ToastContainer />
     </Container>
   )
 }

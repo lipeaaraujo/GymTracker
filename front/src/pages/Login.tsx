@@ -51,13 +51,7 @@ function Login() {
       navigate(from, { replace: true })
     } catch (err) {
       console.error(err);
-      toast.error("Error logging in", {
-        theme: "dark",
-        data: {
-          title: "Error logging in",
-          text: "Check your credentials and try again"
-        }
-      })
+      toast.error("Error logging in");
     }
   }
 
@@ -89,7 +83,6 @@ function Login() {
         }}
       >
         <Box
-          component="section"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -131,56 +124,6 @@ function Login() {
         </Button>
       </CardActions>
     </Card>
-    // <div className="w-1/4 p-4 bg-zinc-800 rounded-lg">
-    //   <h2>Login</h2>
-    //   <p className={errMsg ? "bg-red-800 p-1 rounded-lg" : "hidden"} aria-live="assertive">{errMsg}</p>
-    //   <form className="flex flex-col py-4 gap-1" onSubmit={handleSubmit}>
-    //     <label htmlFor="email" className="flex flex-col">
-    //       Email:
-    //     </label>
-    //     <input
-    //       type="text"
-    //       id="email"
-    //       ref={userRef}
-    //       maxLength={100}
-    //       value={email}
-    //       onChange={(e) => setEmail(e.target.value)}
-    //       required
-    //     />
-    //     <label htmlFor="password" className="flex flex-col">
-    //       Password:
-    //     </label>
-    //     <input
-    //       type="password"
-    //       id="password"
-    //       ref={userRef}
-    //       maxLength={28}
-    //       value={password}
-    //       onChange={(e) => setPassword(e.target.value)}
-    //       required
-    //     />
-    //     <div className="flex gap-1">
-    //       <input 
-    //         type="checkbox"
-    //         id="persist"
-    //         ref={userRef}
-    //         value={persist}
-    //         onChange={togglePersist}
-    //       />
-    //       <label htmlFor="persist">
-    //         Trust This Device
-    //       </label>
-    //     </div>
-    //     <Link to="/register" className="self-end underline">
-    //       Create Account
-    //     </Link>
-    //     <button
-    //       disabled={!formValid}
-    //       className="w-full mt-4">
-    //       Confirm
-    //     </button>
-    //   </form>
-    // </div>
   )
 }
 

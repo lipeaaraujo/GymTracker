@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider';
 import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
+import { Slide, ToastContainer } from 'react-toastify';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -19,6 +20,10 @@ root.render(
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      <ToastContainer 
+        theme='dark' 
+        transition={Slide}
+      />
     </ThemeProvider>
   </React.StrictMode>
 );
