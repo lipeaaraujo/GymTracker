@@ -5,6 +5,7 @@ import theme from "../../theme";
 const Layout = () => {
   return (
     <Container
+      maxWidth={false}
       disableGutters
       sx={{
         height: "100vh",

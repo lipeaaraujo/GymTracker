@@ -49,7 +49,7 @@ const SidebarDrawer = ({ showDrawer, toggleDrawer }: SidebarDrawerProps) => {
       <Box sx={{ padding: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
         <Link to="/">
           <img 
-            src="gymtrackerlogo.png?w=164&h=164&fit=crop&auto=format&dpr=2 2x" 
+            src="/gymtrackerlogo.png?w=164&h=164&fit=crop&auto=format&dpr=2 2x" 
             alt='gymtracker-logo'
             style={{ width: "48px", }}
           />
@@ -63,7 +63,7 @@ const SidebarDrawer = ({ showDrawer, toggleDrawer }: SidebarDrawerProps) => {
         <List>
           {navigationItems.map(item => (
             <ListItem key={item.name} disablePadding>
-              <ListItemButton onClick={() => navigatoTo(item.url)}>
+              <ListItemButton href={item.url}>
                 <ListItemIcon>
                   { item.icon }
                 </ListItemIcon>

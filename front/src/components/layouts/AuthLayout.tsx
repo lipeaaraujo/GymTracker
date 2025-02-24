@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SidebarDrawer from "../SidebarDrawer";
 
 const AuthLayout = () => {
-  const [showDrawer, setShowDrawer] = useState(true);
+  const [showDrawer, setShowDrawer] = useState(false);
 
   const toggleDrawer = () => {
     setShowDrawer(!showDrawer);
@@ -17,6 +17,7 @@ const AuthLayout = () => {
   return (
     <Container
       disableGutters
+      maxWidth={false}
       sx={{
         paddingLeft: 0,
       }}

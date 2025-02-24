@@ -4,8 +4,11 @@ import { Outlet } from "react-router-dom";
 const PublicLayout = () => {
   return (
     <Container
+      disableGutters
+      maxWidth={false}
       sx={{
         height: "100vh",
+        width: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
