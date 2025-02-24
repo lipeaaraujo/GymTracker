@@ -5,9 +5,11 @@ import theme from "../../theme";
 const Layout = () => {
   return (
     <Container
+      disableGutters
       sx={{
         height: "100vh",
-        backgroundColor: "background.default"
+        backgroundColor: "background.default",
+        padding: 0
       }}
     >
       <Outlet />

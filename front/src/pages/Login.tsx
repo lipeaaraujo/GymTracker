@@ -108,7 +108,7 @@ function Login() {
           />
           <FormControlLabel 
             control={
-              <Checkbox value={persist} onChange={togglePersist} />
+              <Checkbox checked={persist} value={persist} onChange={togglePersist} />
             } 
             label="Trust This Device" 
           />

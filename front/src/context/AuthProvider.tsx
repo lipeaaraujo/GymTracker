@@ -7,7 +7,7 @@ type AuthProviderProps = {
 
 type AuthContextType = {
   auth: AuthType | null,
-  setAuth: (auth: AuthType) => void,
+  setAuth: (auth: AuthType | null) => void,
   persist: boolean,
   setPersist: (persist: boolean) => void
 }
