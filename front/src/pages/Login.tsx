@@ -62,8 +62,8 @@ function Login() {
 
 
   const togglePersist = () => {
+    localStorage.setItem("persist", `${!persist}`);
     setPersist(!persist);
-    localStorage.setItem("persist", `${persist}`);
   }
 
   const navigateRegister = () => {
@@ -108,7 +108,7 @@ function Login() {
           />
           <FormControlLabel 
             control={
-              <Checkbox checked={persist} value={persist} onChange={togglePersist} />
+              <Checkbox checked={persist} onChange={togglePersist} />
             } 
             label="Trust This Device" 
           />
