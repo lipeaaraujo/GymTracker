@@ -8,11 +8,12 @@ import { AuthProvider } from './context/AuthProvider';
 import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
 import { Slide, ToastContainer } from 'react-toastify';
-
+import CssBaseline from '@mui/material/CssBaseline';
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <BrowserRouter>
         <AuthProvider>
           <Routes>

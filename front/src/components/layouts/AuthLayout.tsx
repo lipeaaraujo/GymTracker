@@ -19,7 +19,10 @@ const AuthLayout = () => {
       disableGutters
       maxWidth={false}
       sx={{
-        paddingLeft: 0,
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        overflowY: "scroll"
       }}
     >
       <AppBar position="static">

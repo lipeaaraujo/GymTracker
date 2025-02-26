@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ExerciseModal from "../../components/exercises/NewExerciseModal";
+import AddExerciseDialog from "../../components/exercises/AddExerciseDialog";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import List from '@mui/material/List';
@@ -14,6 +14,7 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Button from '@mui/material/Button';
 import { Exercise } from "../../types/exercise.types";
 import { toast } from "react-toastify";
+import Box from '@mui/material/Box';
 
 const USER_URL = "/user";
 const EXERCISE_URL = "/exercises";
@@ -55,47 +56,49 @@ function Exercises() {
 
   return (
     <>
-      <ExerciseModal
+      <AddExerciseDialog
         open={exerciseModal}
         onClose={() => setExerciseModal(false)}
         setExercises={setExercises}
       />
-      <List
-        subheader={
-          <ListSubheader component="div">
-            Your exercises
-          </ListSubheader>
-        }
-      >
-        {exercises.map(exercise => (
-          <ListItem 
-            key={exercise.id}
-            disablePadding
-          >
-            <ListItemButton href={`/exercise/${exercise.id}`} >
-              <ListItemIcon>
-                <FitnessCenterIcon />
-              </ListItemIcon>
-              <ListItemText >
-                { exercise.name }
-              </ListItemText>
-              <ArrowCircleRightIcon sx={{ color: "primary.main" }} />
-            </ListItemButton>
+      <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+        <List
+          subheader={
+            <ListSubheader component="div">
+              Your exercises
+            </ListSubheader>
+          }
+        >
+          {exercises.map(exercise => (
+            <ListItem 
+              key={exercise.id}
+              disablePadding
+            >
+              <ListItemButton href={`/exercise/${exercise.id}`} >
+                <ListItemIcon>
+                  <FitnessCenterIcon />
+                </ListItemIcon>
+                <ListItemText >
+                  { exercise.name }
+                </ListItemText>
+                <ArrowCircleRightIcon sx={{ color: "primary.main" }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+          <ListItem key="add-button" alignItems="center" sx={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              onClick={() => setExerciseModal(true)}
+              variant="outlined"
+              sx={{
+                gap: 1
+              }}
+            >
+              <AddTwoToneIcon />
+              ADD EXERCISE
+            </Button>
           </ListItem>
-        ))}
-        <ListItem alignItems="center" sx={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            onClick={() => setExerciseModal(true)}
-            variant="outlined"
-            sx={{
-              gap: 1
-            }}
-          >
-            <AddTwoToneIcon />
-            ADD EXERCISE
-          </Button>
-        </ListItem>
-      </List>
+        </List>
+      </Box>
     </>
   );
 }
