@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import NewSessionModal from "../../components/session/NewSessionModal";
+import NewSessionModal from "../../components/session/AddSessionDialog";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import SessionBox from "../../components/session/SessionBox";
-import CreateNewButton from "../../components/CreateNewButton";
-import { CgGym } from "react-icons/cg";
-import { CiCalendar } from "react-icons/ci";
 import useExercise from "../../hooks/useExercise";
-import SectionHeader from "../../components/SectionHeader";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import EditExerciseModal from "../../components/exercises/EditExerciseModal";
-import ExerciseInfo from "../../components/exercises/ExerciseInfo";
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -31,7 +25,6 @@ import ListItemText from '@mui/material/ListItemText';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { Exercise } from "../../types/exercise.types";
 import { toast } from "react-toastify";
-import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -66,7 +59,6 @@ const ViewExercise = () => {
           { signal: controller.signal, }
         );
         const exerciseData: Exercise = response?.data;
-        console.log(exerciseData);
         isMounted && setCurrentExercise(exerciseData);
       } catch (err) {
         if (!isMounted) return;
@@ -99,12 +91,11 @@ const ViewExercise = () => {
 
   return (
     <>
-      {/* <NewSessionModal
+      <NewSessionModal
         open={sessionModal}
         onClose={() => setSessionModal(false)}
-        setExercise={setCurrentExercise}
       />
-      <EditExerciseModal
+      {/* <EditExerciseModal
         open={editModal}
         onClose={() => setEditModal(false)}
       />
@@ -131,7 +122,12 @@ const ViewExercise = () => {
           />
         </Card>        
       ) : (
-        <Card variant="elevation">
+        <Card 
+          variant="elevation" 
+          sx={{
+            overflowY: 'scroll'
+          }}
+        >
           <CardHeader
             avatar={
               <IconButton onClick={() => navigate(-1)}>
