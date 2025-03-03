@@ -1,6 +1,7 @@
 import { Set } from "./set.types"
 
 export type Session = {
+  _id: string
   exercise: string,
   date: string,
   sets: Set[],

@@ -32,7 +32,7 @@ const AuthLayout = () => {
           </IconButton>
           <Link to="/">
             <img 
-              src="gymtrackerlogo.png?w=164&h=164&fit=crop&auto=format&dpr=2 2x" 
+              src="/gymtrackerlogo.png?w=164&h=164&fit=crop&auto=format&dpr=2 2x" 
               alt='gymtracker-logo'
               style={{ width: "48px", }}
             />

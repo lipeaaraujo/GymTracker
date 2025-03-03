@@ -15,6 +15,7 @@ import Button from '@mui/material/Button';
 import { Exercise } from "../../types/exercise.types";
 import { toast } from "react-toastify";
 import Box from '@mui/material/Box';
+import { Link } from "react-router-dom";
 
 const USER_URL = "/user";
 const EXERCISE_URL = "/exercises";
@@ -37,6 +38,7 @@ function Exercises() {
           `${USER_URL}/${auth.user.id}${EXERCISE_URL}`,
           { signal: controller.signal, }
         );
+        console.log(response.data);
         const exercisesData: Exercise[] = response.data;
         isMounted && setExercises(exercisesData);
       } catch (err) {
@@ -70,11 +72,13 @@ function Exercises() {
           }
         >
           {exercises.map(exercise => (
-            <ListItem 
-              key={exercise.id}
+            <ListItem
+              component={Link}
+              to={`/exercise/${exercise._id}`}
+              key={exercise._id}
               disablePadding
             >
-              <ListItemButton href={`/exercise/${exercise.id}`} >
+              <ListItemButton>
                 <ListItemIcon>
                   <FitnessCenterIcon />
                 </ListItemIcon>

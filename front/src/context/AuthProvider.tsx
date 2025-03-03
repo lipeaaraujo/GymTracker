@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useState } from "react";
 import { AuthType } from "../types/user.types";
 
-type AuthProviderProps = {
+interface AuthProviderProps {
   children: ReactNode
 }
 
