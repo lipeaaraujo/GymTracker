@@ -88,6 +88,7 @@ const AddExerciseDialog = ({ open, onClose, setExercises }: AddExereciseDialogPr
           flexDirection: 'column',
           gap: 2,
         }}
+        dividers
       >
           <TextField 
             sx={{

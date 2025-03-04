@@ -98,6 +98,7 @@ const EditExerciseDialog = ({ open, onClose }: EditExerciseDialogProps) => {
           flexDirection: 'column',
           gap: 2,
         }}
+        dividers
       >
         <TextField 
           sx={{

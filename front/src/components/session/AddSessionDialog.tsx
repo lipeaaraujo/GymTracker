@@ -84,6 +84,7 @@ const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
           flexDirection: 'column',
           gap: 2,
         }}
+        dividers
       >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
