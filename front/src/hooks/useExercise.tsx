@@ -4,7 +4,7 @@ import ExerciseContext from "../context/ExerciseProvider"
 const useExercise = () => {
   const context = useContext(ExerciseContext);
   if (!context) {
-    throw new Error("useExercise must be used within an AuthProvider");
+    throw new Error("useExercise must be used within an ExerciseProvider");
   }
   return context;
 }
