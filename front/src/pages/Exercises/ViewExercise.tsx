@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import AddSessionDialog from "../../components/session/AddSessionDialog";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useExercise from "../../hooks/useExercise";
-import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
-import EditExerciseModal from "../../components/exercises/EditExerciseModal";
+import EditExerciseDialog from "../../components/exercises/EditExerciseDialog";
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -82,10 +81,10 @@ const ViewExercise = () => {
         open={sessionModal}
         onClose={() => setSessionModal(false)}
       />
-      {/* <EditExerciseModal
+      <EditExerciseDialog
         open={editModal}
         onClose={() => setEditModal(false)}
-      /> */}
+      />
       <DeleteExerciseDialog 
         open={deleteModal}
         onClose={() => setDeleteModal(false)}
@@ -127,7 +126,7 @@ const ViewExercise = () => {
             }
             action={
               <>
-                <IconButton>
+                <IconButton onClick={() => setEditModal(true)}>
                   <EditOutlinedIcon />
                 </IconButton>
                 <IconButton onClick={() => setDeleteModal(true)}>
@@ -196,59 +195,6 @@ const ViewExercise = () => {
           </List>
         </Card>
       )}
-
-
-      {/* <Stack direction="column">
-        <Stack 
-          direction="row"
-          p={1}
-          sx={{ justifyContent: 'flex-start', alignItems: 'center', gap: 2 }}
-        >
-          <IconButton onClick={() => navigate(-1)}>
-            <ChevronLeftTwoToneIcon />
-          </IconButton>
-          <Typography variant="h5">
-            { currentExercise.name }
-          </Typography>
-        </Stack>
-      </Stack> */}
-
-      {/* <section className="flex flex-col gap-4 h-full overflow-y-scroll">
-        <SectionHeader 
-          title="Exercise Details:"
-          canEdit={currentExercise?.name ? true : false}
-          handleEdit={() => setEditModal(true)}
-          handleDelete={() => setConfirmDeleteModal(true)}
-          errMsg={errMsg}
-        />
-        {currentExercise?.name && (
-          <ExerciseInfo 
-            name={currentExercise.name}
-            description={currentExercise.description}
-            personalBest={currentExercise.personalBest}
-          />
-        )}
-        {currentExercise?.name && (
-          <article className="flex flex-col gap-2">
-            <header className="w-full flex justify-center items-center gap-2 text-xl">
-              <CiCalendar size={28} />
-              <h2>Sessions</h2>
-            </header>
-            <section className="flex flex-row gap-4 flex-wrap">
-              {currentExercise?.sessions &&
-                currentExercise.sessions.map((session, i) => (
-                  <SessionBox
-                    key={i}
-                    numSets={session.numSets}
-                    date={session.date}
-                    handleClick={() => viewSession(session._id)}
-                  />
-                ))}
-              <CreateNewButton handleClick={() => setSessionModal(true)} />
-            </section>
-          </article>
-        )}
-      </section> */}
     </>
   );
 }
