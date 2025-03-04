@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import NewSessionModal from "../../components/session/AddSessionDialog";
+import AddSessionDialog from "../../components/session/AddSessionDialog";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useExercise from "../../hooks/useExercise";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
@@ -33,19 +33,18 @@ import { formatDate } from "../../utils/dateUtils";
 import Button from '@mui/material/Button';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import DeleteExerciseDialog from "../../components/exercises/DeleteExerciseDialog";
 
 const EXERCISE_URL = "/exercise";
 
 const ViewExercise = () => {
   const { id } = useParams();
   const axiosPrivate = useAxiosPrivate();
-  const [submitting, setSubmitting] = useState(false);
   const { currentExercise, setCurrentExercise } = useExercise();
-  const location = useLocation();
   const navigate = useNavigate();
 
   const [sessionModal, setSessionModal] = useState(false);
-  const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
 
   useEffect(() => {
@@ -75,38 +74,22 @@ const ViewExercise = () => {
     };
   }, []);
 
-  const deleteExercise = async () => {
-    try {
-      setSubmitting(true);
-      await axiosPrivate.delete(
-        `${EXERCISE_URL}/${id}`,
-      )
-      navigate(-1);
-      setSubmitting(false);
-    } catch (err) {
-      console.error(err);
-      toast.error("Error deleting exercise");
-    }
-  }
+  
 
   return (
     <>
-      <NewSessionModal
+      <AddSessionDialog
         open={sessionModal}
         onClose={() => setSessionModal(false)}
       />
       {/* <EditExerciseModal
         open={editModal}
         onClose={() => setEditModal(false)}
-      />
-      <ConfirmDeleteModal
-        open={confirmDeleteModal}
-        onClose={() => setConfirmDeleteModal(false)}
-        title="Delete Exercise"
-        message="Are you sure you want to delete this exercise?"
-        handleConfirm={deleteExercise}
-        disabled={submitting}
       /> */}
+      <DeleteExerciseDialog 
+        open={deleteModal}
+        onClose={() => setDeleteModal(false)}
+      />
 
       {!currentExercise ? (
         <Card>
@@ -147,7 +130,7 @@ const ViewExercise = () => {
                 <IconButton>
                   <EditOutlinedIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => setDeleteModal(true)}>
                   <DeleteOutlineIcon />
                 </IconButton>
               </>
