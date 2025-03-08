@@ -6,15 +6,13 @@ import ListItemText from '@mui/material/ListItemText';
 import EditDeleteActions from '../EditDeleteActions';
 
 interface SetItemProps {
-  key: React.Key,
   weight: number,
   numReps: number,
 }
 
-const SetItem = ({ key, weight, numReps }: SetItemProps) => {
+const SetItem = ({ weight, numReps }: SetItemProps) => {
   return (
     <ListItem
-      key={key}
       disablePadding
       secondaryAction={
         <EditDeleteActions 

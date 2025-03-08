@@ -3,7 +3,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { formatDate, formatDateToYMD } from "../../utils/dateUtils";
 import useSession from "../../hooks/useSession";
-import ConfirmModal from "../../components/ConfirmDeleteModal";
 import useExercise from "../../hooks/useExercise";
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -25,6 +24,7 @@ import { Session } from "../../types/session.types";
 import SetItem from "../../components/sets/SetItem";
 import EditDeleteActions from "../../components/EditDeleteActions";
 import EditSessionDialog from "../../components/session/EditSessionDialog";
+import DeleteSessionDialog from "../../components/session/DeleteSessionDialog";
 
 const SESSIONS_URL = "/session";
 
@@ -37,12 +37,10 @@ const ViewSession = () => {
   const [formattedDate, setFormattedDate] = useState("");
 
   const axiosPrivate = useAxiosPrivate();
-  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [editModal , setEditModal] = useState(false);
-  const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 
   const [addingSet, setAddingSet] = useState(false);
 
@@ -73,20 +71,6 @@ const ViewSession = () => {
     };
   }, []);
 
-  const deleteSession = async () => {
-    try {
-      setSubmitting(true);
-      await axiosPrivate.delete(
-        `${SESSIONS_URL}/${id}`
-      )
-      setSubmitting(false)
-      navigate(-1);
-    } catch (err) {
-      console.error(err);
-      toast.error("Error deleting session. Try again later");
-    }
-  }
-
   // updates number of sets and max load 
   // when an operation is made with the sets.
   useEffect(() => {
@@ -106,13 +90,9 @@ const ViewSession = () => {
       open={editModal}
       onClose={() => setEditModal(false)}
     />
-    <ConfirmModal 
-      open={confirmDeleteModal}
-      onClose={() => setConfirmDeleteModal(false)}
-      title="Delete Session"
-      message="Are you sure you want to delete this session?"
-      handleConfirm={deleteSession}
-      disabled={submitting}
+    <DeleteSessionDialog 
+      open={deleteDialog}
+      onClose={() => setDeleteDialog(false)}
     />
     {!curSession ? (
       <Card>
@@ -150,7 +130,7 @@ const ViewSession = () => {
           action={
             <EditDeleteActions 
               editAction={() => setEditModal(true)}
-              deleteAction={() => {}}
+              deleteAction={() => {setDeleteDialog(true)}}
             />
           }
         />

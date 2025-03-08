@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
+import useSession from "../../hooks/useSession";
 import { toast } from "react-toastify";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,38 +9,36 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import useExercise from "../../hooks/useExercise";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Stack from '@mui/material/Stack';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-interface DeleteExerciseDialogProps {
+interface DeleteSessionDialogProps {
   open: boolean,
-  onClose: () => void,
+  onClose: () => void
 }
 
-const EXERCISE_URL = "/exercise";
+const SESSIONS_URL = "/session"
 
-const DeleteExerciseDialog = ({ open, onClose }: DeleteExerciseDialogProps) => {
+const DeleteSessionDialog = ({ open, onClose }: DeleteSessionDialogProps) => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  const { currentExercise, setCurrentExercise } = useExercise();
 
+  const { curSession } = useSession();
   const [submitting, setSubmitting] = useState(false);
-
-  const deleteExercise = async () => {
+  
+  const deleteSession = async () => {
     try {
       setSubmitting(true);
       await axiosPrivate.delete(
-        `${EXERCISE_URL}/${currentExercise?._id}`,
+        `${SESSIONS_URL}/${curSession?._id}`
       )
       navigate(-1);
-      setCurrentExercise(null);
-      toast.success("Exercise succesfully deleted");  
+      toast.success("Session successfully deleted");
     } catch (err) {
       console.error(err);
-      toast.error("Error deleting exercise");
+      toast.error("Error deleting session. Try again later");
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
       onClose();
     }
   }
@@ -52,7 +51,7 @@ const DeleteExerciseDialog = ({ open, onClose }: DeleteExerciseDialogProps) => {
       <DialogTitle>
         <Stack direction='row' gap={1}>
           <DeleteOutlineIcon />
-          Delete Exercise
+          Delete Session
         </Stack>
       </DialogTitle>
       <DialogContent
@@ -64,7 +63,7 @@ const DeleteExerciseDialog = ({ open, onClose }: DeleteExerciseDialogProps) => {
         dividers
       >
         <DialogContentText>
-          Are you sure you want to delete this exercise?
+          Are you sure you want to delete this session?
         </DialogContentText>
         <Box
           sx={{
@@ -78,7 +77,7 @@ const DeleteExerciseDialog = ({ open, onClose }: DeleteExerciseDialogProps) => {
             color="error" 
             sx={{ width: "100%" }}
             loading={submitting}
-            onClick={deleteExercise}
+            onClick={deleteSession}
           >
             Confirm
           </Button>
@@ -97,4 +96,4 @@ const DeleteExerciseDialog = ({ open, onClose }: DeleteExerciseDialogProps) => {
   )
 }
 
-export default DeleteExerciseDialog;
+export default DeleteSessionDialog;
