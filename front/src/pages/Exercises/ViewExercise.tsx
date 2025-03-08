@@ -10,8 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftTwoToneIcon from '@mui/icons-material/ChevronLeftTwoTone';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Divider from '@mui/material/Divider';
 import CardContent from '@mui/material/CardContent';
 import List from '@mui/material/List';
@@ -33,6 +31,7 @@ import Button from '@mui/material/Button';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import DeleteExerciseDialog from "../../components/exercises/DeleteExerciseDialog";
+import EditDeleteActions from "../../components/EditDeleteActions";
 
 const EXERCISE_URL = "/exercise";
 
@@ -125,14 +124,10 @@ const ViewExercise = () => {
               </Stack>
             }
             action={
-              <>
-                <IconButton onClick={() => setEditModal(true)}>
-                  <EditOutlinedIcon />
-                </IconButton>
-                <IconButton onClick={() => setDeleteModal(true)}>
-                  <DeleteOutlineIcon />
-                </IconButton>
-              </>
+              <EditDeleteActions 
+                editAction={() => setEditModal(true)}
+                deleteAction={() => setDeleteModal(true)}
+              />
             }
           />
           <CardContent>

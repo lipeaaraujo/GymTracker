@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { formatDate, formatDateToYMD } from "../../utils/dateUtils";
 import useSession from "../../hooks/useSession";
 import EditSessionModal from "../../components/session/EditSessionModal";
@@ -14,8 +14,6 @@ import ChevronLeftTwoToneIcon from '@mui/icons-material/ChevronLeftTwoTone';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -26,6 +24,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import { toast } from "react-toastify";
 import { Session } from "../../types/session.types";
 import SetItem from "../../components/sets/SetItem";
+import EditDeleteActions from "../../components/EditDeleteActions";
 
 const SESSIONS_URL = "/session";
 
@@ -149,14 +148,10 @@ const ViewSession = () => {
             </Stack>
           }
           action={
-            <>
-              <IconButton>
-                <EditOutlinedIcon />
-              </IconButton>
-              <IconButton>
-                <DeleteOutlineIcon />
-              </IconButton>
-            </>
+            <EditDeleteActions 
+              editAction={() => {}}
+              deleteAction={() => {}}
+            />
           }
         />
         <CardContent>
