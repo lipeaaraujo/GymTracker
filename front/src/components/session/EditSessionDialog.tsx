@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useExercise from "../../hooks/useExercise";
+import useSession from "../../hooks/useSession";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { toast } from "react-toastify";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import { Session } from "../../types/session.types";
-import { dayjs2DateStr } from "../../utils/dateUtils";
+import { dateStr2DayJs, dayjs2DateStr } from "../../utils/dateUtils";
 
-interface AddSessionDialogProps {
+interface EditSessionDialogProps {
   open: boolean,
   onClose: () => void
 }
 
 const SESSIONS_URL = "/session";
 
-const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
-  const { currentExercise, setCurrentExercise } = useExercise();
+const EditSessionDialog = ({ open, onClose }: EditSessionDialogProps) => {
+  const { currentExercise } = useExercise();
+  const { curSession, setCurSession } = useSession();
   const axiosPrivate = useAxiosPrivate();
   const [submitting, setSubmitting] = useState(false);
 
@@ -29,45 +30,42 @@ const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
   const [validDate, setValidDate] = useState(false);
 
   useEffect(() => {
+    curSession?.date && setDate(dateStr2DayJs(curSession.date));
+  }, [curSession])
+
+  useEffect(() => {
     const result = date ? true : false;
-    // date && console.log(date, dayjs2DateStr(date));
+    // date && console.log(curSession?.date, date, dayjs2DateStr(date));
     setValidDate(result);
   }, [date]);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-
-    // prevent bypass of required fields
-    if (!date) return;
+    
+    if (curSession == null) return;
+    if (currentExercise == null) return;
+    if (date == null) return;
 
     try {
-      if (currentExercise == null) return;
       setSubmitting(true);
       const dateString = dayjs2DateStr(date);
-      const response = await axiosPrivate.post(
-        SESSIONS_URL,
+      // console.log(dateString);
+      const response = await axiosPrivate.put(
+        `${SESSIONS_URL}/${curSession._id}`,
         JSON.stringify({ exercise: currentExercise._id, date: dateString })
       );
+      // console.log(response?.data);
+      const sessionData: Session = response.data;
       setDate(null);
-
-      // add the new session to the list
-      const newSession: Session = {
-        ...response?.data,
-        numSets: 0,
-        biggestLoad: 0,
-      }
-      setCurrentExercise(prev => {
-        if (prev == null) return null;
-        return {...prev, sessions: [...prev.sessions, newSession]};
+      setCurSession(prev => {
+        if (prev === null) return null;
+        return { ...prev, date: sessionData.date }
       });
-
-      toast.success("Session successfully created");
     } catch (err) {
       console.error(err);
-      toast.error("Error creating session.")
     } finally {
       setSubmitting(false);
-      onClose();
+      onClose()
     }
   };
 
@@ -127,4 +125,4 @@ const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
   );
 }
 
-export default AddSessionDialog;
+export default EditSessionDialog;

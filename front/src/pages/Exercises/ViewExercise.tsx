@@ -55,6 +55,7 @@ const ViewExercise = () => {
           `${EXERCISE_URL}/${id}/sessions`,
           { signal: controller.signal, }
         );
+        console.log(response.data);
         const exerciseData: Exercise = response?.data;
         isMounted && setCurrentExercise(exerciseData);
       } catch (err) {

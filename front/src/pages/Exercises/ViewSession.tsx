@@ -3,7 +3,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { formatDate, formatDateToYMD } from "../../utils/dateUtils";
 import useSession from "../../hooks/useSession";
-import EditSessionModal from "../../components/session/EditSessionModal";
 import ConfirmModal from "../../components/ConfirmDeleteModal";
 import useExercise from "../../hooks/useExercise";
 import Card from '@mui/material/Card';
@@ -25,6 +24,7 @@ import { toast } from "react-toastify";
 import { Session } from "../../types/session.types";
 import SetItem from "../../components/sets/SetItem";
 import EditDeleteActions from "../../components/EditDeleteActions";
+import EditSessionDialog from "../../components/session/EditSessionDialog";
 
 const SESSIONS_URL = "/session";
 
@@ -102,7 +102,7 @@ const ViewSession = () => {
 
   return (
     <>
-    <EditSessionModal 
+    <EditSessionDialog 
       open={editModal}
       onClose={() => setEditModal(false)}
     />
@@ -149,7 +149,7 @@ const ViewSession = () => {
           }
           action={
             <EditDeleteActions 
-              editAction={() => {}}
+              editAction={() => setEditModal(true)}
               deleteAction={() => {}}
             />
           }
