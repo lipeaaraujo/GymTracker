@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatDate, formatDateToYMD } from "../../utils/dateUtils";
 import useSession from "../../hooks/useSession";
 import useExercise from "../../hooks/useExercise";
@@ -25,7 +25,10 @@ import SetItem from "../../components/sets/SetItem";
 import EditDeleteActions from "../../components/EditDeleteActions";
 import EditSessionDialog from "../../components/session/EditSessionDialog";
 import DeleteSessionDialog from "../../components/session/DeleteSessionDialog";
-
+import Button from '@mui/material/Button';
+import ListItem from '@mui/material/ListItem';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import NewSetDialog from "../../components/sets/NewSetDialog";
 const SESSIONS_URL = "/session";
 
 const ViewSession = () => {
@@ -41,6 +44,7 @@ const ViewSession = () => {
 
   const [editModal , setEditModal] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
+  const [newSetDialog, setNewSetDialog] = useState(false);
 
   const [addingSet, setAddingSet] = useState(false);
 
@@ -93,6 +97,10 @@ const ViewSession = () => {
     <DeleteSessionDialog 
       open={deleteDialog}
       onClose={() => setDeleteDialog(false)}
+    />
+    <NewSetDialog 
+      open={newSetDialog}
+      onClose={() => setNewSetDialog(false)}
     />
     {!curSession ? (
       <Card>
@@ -181,7 +189,20 @@ const ViewSession = () => {
               weight={set.weight}
             />
           ))}
+          <ListItem key="add-button" alignItems="center" sx={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              onClick={() => setNewSetDialog(true)}
+              variant="outlined"
+              sx={{
+                gap: 1
+              }}
+            >
+            <AddTwoToneIcon />
+              ADD SET
+            </Button>
+          </ListItem>
         </List>
+        
       </Card>
     )}
     </>
