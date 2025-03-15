@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api/axios";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -11,15 +10,15 @@ import TextField from '@mui/material/TextField';
 import PasswordInput from "../components/PasswordInput";
 import { toast } from "react-toastify";
 import { RegisterUserBody } from "../types/user.types";
+import useUserService from "../api/user.service";
 
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const EMAIL_REGEX = /^[\w+.]+@\w+\.\w{2,}(?:\.\w{2})?$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-const REGISTER_URL = '/register';
-
 function Register() {
   const navigate = useNavigate();
+  const { RegisterUser } = useUserService();
 
   // name useStates
   const [name, setName] = useState("");
@@ -39,7 +38,6 @@ function Register() {
 
   // formValid useState
   const [formValid, setFormValid] = useState(false);
-
 
   // hooks
   useEffect(() => {
@@ -81,10 +79,7 @@ function Register() {
     }
 
     try {
-      await axios.post(
-        REGISTER_URL,
-        JSON.stringify(user),
-      )
+      await RegisterUser(user);
       // console.log(JSON.stringify(response));
       toast.success("Register successfull");
       navigate("/login");
