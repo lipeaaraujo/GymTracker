@@ -84,10 +84,6 @@ function Register() {
       await axios.post(
         REGISTER_URL,
         JSON.stringify(user),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        }
       )
       // console.log(JSON.stringify(response));
       toast.success("Register successfull");
