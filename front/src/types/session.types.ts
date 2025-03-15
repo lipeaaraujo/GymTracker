@@ -8,3 +8,8 @@ export type Session = {
   numSets?: number,
   biggestLoad?: number
 }
+
+export type SessionBody = {
+  exercise: string,
+  date: string,
+}
