@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { AuthType, LoginUserType } from "../types/user.types";
+import { AuthType, LoginUserBody } from "../types/user.types";
 import { toast } from "react-toastify";
 
 const LOGIN_URL = "/login";
@@ -35,7 +35,7 @@ function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const user: LoginUserType = {
+    const user: LoginUserBody = {
       email,
       password
     }
@@ -45,7 +45,6 @@ function Login() {
         LOGIN_URL,
         JSON.stringify(user),
         {
-          headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         }
       )

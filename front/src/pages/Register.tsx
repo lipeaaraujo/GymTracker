@@ -10,7 +10,7 @@ import CardHeader from '@mui/material/CardHeader';
 import TextField from '@mui/material/TextField';
 import PasswordInput from "../components/PasswordInput";
 import { toast } from "react-toastify";
-import { RegisterUserType } from "../types/user.types";
+import { RegisterUserBody } from "../types/user.types";
 
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const EMAIL_REGEX = /^[\w+.]+@\w+\.\w{2,}(?:\.\w{2})?$/;
@@ -74,7 +74,7 @@ function Register() {
       return;
     }
 
-    const user: RegisterUserType = {
+    const user: RegisterUserBody = {
       name,
       email,
       password
