@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import AddExerciseDialog from "../../components/exercises/AddExerciseDialog";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -16,44 +15,29 @@ import { Exercise } from "../../types/exercise.types";
 import { toast } from "react-toastify";
 import Box from '@mui/material/Box';
 import { Link } from "react-router-dom";
-
-const USER_URL = "/user";
-const EXERCISE_URL = "/exercises";
+import useExerciseService from "../../api/exercise.service";
 
 function Exercises() {
   const { auth } = useAuth();
-  const axiosPrivate = useAxiosPrivate();
+  const { getUserExercises } = useExerciseService();
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [exerciseModal, setExerciseModal] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const getExercises = async () => {
+    const fetchExercises = async () => {
       try {
         if (auth === null) return;
-        const response = await axiosPrivate.get(
-          `${USER_URL}/${auth.user.id}${EXERCISE_URL}`,
-          { signal: controller.signal, }
-        );
-        console.log(response.data);
-        const exercisesData: Exercise[] = response.data;
-        isMounted && setExercises(exercisesData);
+        // console.log(response.data);
+        const exercisesData: Exercise[] = await getUserExercises(auth.user.id);
+        setExercises(exercisesData);
       } catch (err) {
-        if (!isMounted) return;
         console.error(err);
         toast.error("Error fetching exercises");
       }
     };
 
-    getExercises();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
+    fetchExercises();
   }, []);
 
   return (

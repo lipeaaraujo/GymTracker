@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
@@ -8,7 +7,8 @@ import TextField from '@mui/material/TextField';
 import DialogContent from '@mui/material/DialogContent';
 import Button from '@mui/material/Button';
 import { toast } from "react-toastify";
-import { Exercise } from "../../types/exercise.types";
+import { Exercise, ExerciseBody } from "../../types/exercise.types";
+import useExerciseService from "../../api/exercise.service";
 
 interface AddExereciseDialogProps {
   open: boolean,
@@ -16,13 +16,12 @@ interface AddExereciseDialogProps {
   setExercises: Dispatch<SetStateAction<Exercise[]>>
 }
 
-const EXERCISE_URL = "/exercise";
 const NAME_REGEX = /^\S+(?: \S+)*$/;
 const DESCRIPTION_REGEX = /^\S+(?: \S+)*$/;
 
 const AddExerciseDialog = ({ open, onClose, setExercises }: AddExereciseDialogProps) => {
-  const axiosPrivate = useAxiosPrivate();
   const { auth } = useAuth();
+  const { createExercise } = useExerciseService();
   const [submitting, setSubmitting] = useState(false);
 
   const [name, setName] = useState("");
@@ -55,14 +54,18 @@ const AddExerciseDialog = ({ open, onClose, setExercises }: AddExereciseDialogPr
     try {
       setSubmitting(true);
       if (auth === null) return;
-      const response = await axiosPrivate.post(
-        EXERCISE_URL,
-        JSON.stringify({ user: auth.user.id, name, description }),
-      )
+
+      const exerciseData: ExerciseBody = {
+        user: auth.user.id,
+        name,
+        description
+      }
+
+      const createdExercise: Exercise = await createExercise(exerciseData)  
       setName("");
       setDescription("");
       setExercises(prev => {
-        return [...prev, response.data]
+        return [...prev, createdExercise]
       });
       toast.success("Exercise succesfully created");  
     } catch (err) {

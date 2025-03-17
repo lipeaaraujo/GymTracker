@@ -2,6 +2,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { ExerciseBody, Exercise } from "../types/exercise.types";
 
 const EXERCISE_URL = "/exercise";
+const USER_URL = "/user";
 
 interface ExerciseServiceInterface {
   createExercise: (exerciseData: ExerciseBody) => Promise<Exercise>,
@@ -10,6 +11,8 @@ interface ExerciseServiceInterface {
     exerciseData: ExerciseBody
   ) => Promise<Exercise>,
   deleteExercise: (exerciseId: string) => Promise<Exercise>,
+  getUserExercises: (userId: string) => Promise<Exercise[]>,
+  getExerciseAndSessions: (exerciseId: string) => Promise<Exercise>
 } 
 
 const useExerciseService = (): ExerciseServiceInterface => {
@@ -56,10 +59,36 @@ const useExerciseService = (): ExerciseServiceInterface => {
     }
   }
 
+  const getUserExercises = async (userId: string): Promise<Exercise[]> => {
+    try {
+      const response = await axiosPrivate.get(
+        `${USER_URL}/${userId}/exercises`,
+      )
+      return response.data;
+    } catch (err) {
+      console.error("Error fetching exercises:", err);
+      throw err;
+    }
+  }
+
+  const getExerciseAndSessions = async (exerciseId: string): Promise<Exercise> => {
+    try {
+      const response = await axiosPrivate.get(
+        `${EXERCISE_URL}/${exerciseId}/sessions`,
+      );
+      return response.data;
+    } catch (err) {
+      console.error("Error fetching exercise:", err);
+      throw err;
+    }
+  }
+
   return {
     createExercise,
     editExercise,
     deleteExercise,
+    getUserExercises,
+    getExerciseAndSessions,
   }
 }
 

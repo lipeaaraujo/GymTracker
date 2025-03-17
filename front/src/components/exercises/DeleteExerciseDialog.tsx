@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Box from '@mui/material/Box';
@@ -11,27 +10,25 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useExercise from "../../hooks/useExercise";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Stack from '@mui/material/Stack';
+import useExerciseService from "../../api/exercise.service";
 
 interface DeleteExerciseDialogProps {
   open: boolean,
   onClose: () => void,
 }
 
-const EXERCISE_URL = "/exercise";
-
 const DeleteExerciseDialog = ({ open, onClose }: DeleteExerciseDialogProps) => {
-  const axiosPrivate = useAxiosPrivate();
+  const { deleteExercise } = useExerciseService();
   const navigate = useNavigate();
   const { currentExercise, setCurrentExercise } = useExercise();
 
   const [submitting, setSubmitting] = useState(false);
 
-  const deleteExercise = async () => {
+  const handleSubmit = async () => {
     try {
+      if (!currentExercise) return;
       setSubmitting(true);
-      await axiosPrivate.delete(
-        `${EXERCISE_URL}/${currentExercise?._id}`,
-      )
+      await deleteExercise(currentExercise?._id);
       navigate(-1);
       setCurrentExercise(null);
       toast.success("Exercise succesfully deleted");  
@@ -78,7 +75,7 @@ const DeleteExerciseDialog = ({ open, onClose }: DeleteExerciseDialogProps) => {
             color="error" 
             sx={{ width: "100%" }}
             loading={submitting}
-            onClick={deleteExercise}
+            onClick={handleSubmit}
           >
             Confirm
           </Button>
