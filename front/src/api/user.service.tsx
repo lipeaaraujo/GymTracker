@@ -22,7 +22,8 @@ const useUserService = () => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify(loginData)
+        JSON.stringify(loginData),
+        { withCredentials: true }
       );
       return response.data;
     } catch (err) {
