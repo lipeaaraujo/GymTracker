@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 import useSession from "../../hooks/useSession";
 import { toast } from "react-toastify";
@@ -11,27 +10,28 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import useSessionService from "../../api/session.service";
 
 interface DeleteSessionDialogProps {
   open: boolean,
   onClose: () => void
 }
 
-const SESSIONS_URL = "/session"
-
 const DeleteSessionDialog = ({ open, onClose }: DeleteSessionDialogProps) => {
-  const axiosPrivate = useAxiosPrivate();
+  const { deleteSession } = useSessionService();
   const navigate = useNavigate();
 
   const { curSession } = useSession();
   const [submitting, setSubmitting] = useState(false);
   
-  const deleteSession = async () => {
+  const handleSubmit = async () => {
     try {
+      if (!curSession) return;
       setSubmitting(true);
-      await axiosPrivate.delete(
-        `${SESSIONS_URL}/${curSession?._id}`
-      )
+      // await axiosPrivate.delete(
+      //   `${SESSIONS_URL}/${curSession?._id}`
+      // )
+      await deleteSession(curSession?._id);
       navigate(-1);
       toast.success("Session successfully deleted");
     } catch (err) {
@@ -77,7 +77,7 @@ const DeleteSessionDialog = ({ open, onClose }: DeleteSessionDialogProps) => {
             color="error" 
             sx={{ width: "100%" }}
             loading={submitting}
-            onClick={deleteSession}
+            onClick={handleSubmit}
           >
             Confirm
           </Button>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useExercise from "../../hooks/useExercise";
 import useSession from "../../hooks/useSession";
 import Box from '@mui/material/Box';
@@ -10,20 +9,19 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
-import { Session } from "../../types/session.types";
+import { Session, SessionBody } from "../../types/session.types";
 import { dateStr2DayJs, dayjs2DateStr } from "../../utils/dateUtils";
+import useSessionService from "../../api/session.service";
 
 interface EditSessionDialogProps {
   open: boolean,
   onClose: () => void
 }
 
-const SESSIONS_URL = "/session";
-
 const EditSessionDialog = ({ open, onClose }: EditSessionDialogProps) => {
   const { currentExercise } = useExercise();
+  const { editSession } = useSessionService();
   const { curSession, setCurSession } = useSession();
-  const axiosPrivate = useAxiosPrivate();
   const [submitting, setSubmitting] = useState(false);
 
   const [date, setDate] = useState<Dayjs | null>(null);
@@ -49,18 +47,25 @@ const EditSessionDialog = ({ open, onClose }: EditSessionDialogProps) => {
     try {
       setSubmitting(true);
       const dateString = dayjs2DateStr(date);
-      // console.log(dateString);
-      const response = await axiosPrivate.put(
-        `${SESSIONS_URL}/${curSession._id}`,
-        JSON.stringify({ exercise: currentExercise._id, date: dateString })
+
+      const sessionData: SessionBody = {
+        exercise: currentExercise._id,
+        date: dateString
+      }
+      // console.log(sessionData);
+
+      const savedSession: Session = await editSession(
+        curSession._id,
+        sessionData
       );
-      // console.log(response?.data);
-      const sessionData: Session = response.data;
-      setDate(null);
+      // console.log(savedSession);
+
       setCurSession(prev => {
         if (prev === null) return null;
-        return { ...prev, date: sessionData.date }
+        return { ...prev, date: savedSession.date }
       });
+
+      setDate(null);
     } catch (err) {
       console.error(err);
     } finally {

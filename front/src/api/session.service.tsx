@@ -10,6 +10,7 @@ interface SessionServiceInterface {
     sessionData: SessionBody
   ) => Promise<Session>,
   deleteSession: (sessionId: string) => Promise<Session>,
+  getSessionAndSets: (sessionId: string) => Promise<Session>
 } 
 
 const useSessionService = (): SessionServiceInterface => {
@@ -56,10 +57,23 @@ const useSessionService = (): SessionServiceInterface => {
     }
   }
 
+  const getSessionAndSets = async (sessionId: string): Promise<Session> => {
+    try {
+      const response = await axiosPrivate.get(
+        `${SESSION_URL}/${sessionId}/sets`
+      )
+      return response.data;
+    } catch (err) {
+      console.error("Error fetching session:", err);
+      throw err;
+    }
+  }
+
   return {
     createSession,
     editSession,
     deleteSession,
+    getSessionAndSets
   }
 }
 
