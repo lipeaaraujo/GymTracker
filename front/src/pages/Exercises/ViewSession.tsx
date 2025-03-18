@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDate, formatDateToYMD } from "../../utils/dateUtils";
 import useSession from "../../hooks/useSession";
@@ -29,17 +28,17 @@ import Button from '@mui/material/Button';
 import ListItem from '@mui/material/ListItem';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import NewSetDialog from "../../components/sets/NewSetDialog";
-const SESSIONS_URL = "/session";
+import useSessionService from "../../api/session.service";
 
 const ViewSession = () => {
   const { id } = useParams();
+  const { getSessionAndSets } = useSessionService();
   const { curSession, setCurSession } = useSession();
   const { currentExercise } = useExercise();
 
   const [formattedDateYMD, setFormattedDateYMD] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
 
-  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
   const [editModal , setEditModal] = useState(false);
@@ -53,12 +52,10 @@ const ViewSession = () => {
     let isMounted = true;
     const controller = new AbortController();
 
-    const getSessionAndSets = async () => {
+    const fetchSessionAndSets = async () => {
       try {
-        const response = await axiosPrivate.get(`${SESSIONS_URL}/${id}/sets`, {
-          signal: controller.signal,
-        });
-        const sessionData: Session = response.data;
+        if (!id) return;
+        const sessionData: Session = await getSessionAndSets(id);
         setCurSession(sessionData);
       } catch (err) {
         if (!isMounted) return;
@@ -67,7 +64,7 @@ const ViewSession = () => {
       }
     };
 
-    getSessionAndSets();
+    fetchSessionAndSets();
 
     return () => {
       isMounted = false;

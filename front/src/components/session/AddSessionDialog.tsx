@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useExercise from "../../hooks/useExercise";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -10,19 +9,18 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { toast } from "react-toastify";
 import { Dayjs } from "dayjs";
-import { Session } from "../../types/session.types";
+import { Session, SessionBody } from "../../types/session.types";
 import { dayjs2DateStr } from "../../utils/dateUtils";
+import useSessionService from "../../api/session.service";
 
 interface AddSessionDialogProps {
   open: boolean,
   onClose: () => void
 }
 
-const SESSIONS_URL = "/session";
-
 const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
   const { currentExercise, setCurrentExercise } = useExercise();
-  const axiosPrivate = useAxiosPrivate();
+  const { createSession } = useSessionService();
   const [submitting, setSubmitting] = useState(false);
 
   const [date, setDate] = useState<Dayjs | null>(null);
@@ -44,23 +42,26 @@ const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
       if (currentExercise == null) return;
       setSubmitting(true);
       const dateString = dayjs2DateStr(date);
-      const response = await axiosPrivate.post(
-        SESSIONS_URL,
-        JSON.stringify({ exercise: currentExercise._id, date: dateString })
-      );
-      setDate(null);
+      const sessionData: SessionBody = {
+        exercise: currentExercise._id,
+        date: dateString
+      }
+
+      const createdSession: Session = await createSession(sessionData);
 
       // add the new session to the list
-      const newSession: Session = {
-        ...response?.data,
-        numSets: 0,
-        biggestLoad: 0,
-      }
       setCurrentExercise(prev => {
         if (prev == null) return null;
-        return {...prev, sessions: [...prev.sessions, newSession]};
+        return {
+          ...prev,
+          sessions: [
+            ...prev.sessions,
+            createdSession
+          ]
+        };
       });
 
+      setDate(null);
       toast.success("Session successfully created");
     } catch (err) {
       console.error(err);

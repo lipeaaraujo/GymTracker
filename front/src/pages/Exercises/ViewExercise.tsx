@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import AddSessionDialog from "../../components/session/AddSessionDialog";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useExercise from "../../hooks/useExercise";
 import EditExerciseDialog from "../../components/exercises/EditExerciseDialog";
 import Stack from '@mui/material/Stack';
@@ -32,12 +31,11 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import DeleteExerciseDialog from "../../components/exercises/DeleteExerciseDialog";
 import EditDeleteActions from "../../components/EditDeleteActions";
-
-const EXERCISE_URL = "/exercise";
+import useExerciseService from "../../api/exercise.service";
 
 const ViewExercise = () => {
   const { id } = useParams();
-  const axiosPrivate = useAxiosPrivate();
+  const { getExerciseAndSessions } = useExerciseService();
   const { currentExercise, setCurrentExercise } = useExercise();
   const navigate = useNavigate();
 
@@ -46,34 +44,20 @@ const ViewExercise = () => {
   const [editModal, setEditModal] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
     const getExercise = async () => {
       try {
-        const response = await axiosPrivate.get(
-          `${EXERCISE_URL}/${id}/sessions`,
-          { signal: controller.signal, }
-        );
-        console.log(response.data);
-        const exerciseData: Exercise = response?.data;
-        isMounted && setCurrentExercise(exerciseData);
+        // return if id is not available
+        if (!id) return; 
+        const exerciseData: Exercise = await getExerciseAndSessions(id);
+        setCurrentExercise(exerciseData);
       } catch (err) {
-        if (!isMounted) return;
         console.error(err);
         toast.error("Couldn't fetch exercise");
       }
     };
 
     getExercise();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
   }, []);
-
-  
 
   return (
     <>

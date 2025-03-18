@@ -1,6 +1,5 @@
 import { useEffect,  useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -11,16 +10,16 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { AuthType, LoginUserType } from "../types/user.types";
+import { AuthType, LoginUserBody } from "../types/user.types";
 import { toast } from "react-toastify";
-
-const LOGIN_URL = "/login";
+import useUserService from "../api/user.service";
 
 function Login() {
   const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { LoginUser } = useUserService();
   const from = location.state?.from?.pathname || "/";  
 
   const [email, setEmail] = useState("");
@@ -35,21 +34,13 @@ function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const user: LoginUserType = {
+    const user: LoginUserBody = {
       email,
       password
     }
 
     try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify(user),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        }
-      )
-      const authData: AuthType = response?.data;
+      const authData: AuthType = await LoginUser(user);
       setAuth(authData);
       setEmail("");
       setPassword("");
@@ -59,7 +50,6 @@ function Login() {
       toast.error("Error logging in, check your credentials");
     }
   }
-
 
   const togglePersist = () => {
     localStorage.setItem("persist", `${!persist}`);

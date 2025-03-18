@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useExercise from "../../hooks/useExercise";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,8 +7,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { toast } from "react-toastify";
+import useExerciseService from "../../api/exercise.service";
+import { Exercise, ExerciseBody } from "../../types/exercise.types";
 
-const EXERCISE_URL = "/exercise";
 const NAME_REGEX = /^\S+(?: \S+)*$/;
 const DESCRIPTION_REGEX = /^\S+(?: \S+)*$/;
 
@@ -19,7 +19,7 @@ interface EditExerciseDialogProps {
 }
 
 const EditExerciseDialog = ({ open, onClose }: EditExerciseDialogProps) => {
-  const axiosPrivate = useAxiosPrivate();
+  const { editExercise } = useExerciseService();
   const [submitting, setSubmitting] = useState(false);
   const { currentExercise, setCurrentExercise } = useExercise();
 
@@ -57,18 +57,25 @@ const EditExerciseDialog = ({ open, onClose }: EditExerciseDialogProps) => {
     try {
       if (currentExercise == null) return;
       setSubmitting(true);
-      await axiosPrivate.put(
-        `${EXERCISE_URL}/${currentExercise._id}`,
-        JSON.stringify({ name, description }),
-      )
+
+      const exerciseData: ExerciseBody = {
+        user: currentExercise.user,
+        name,
+        description
+      }
+
+      const savedExercise: Exercise = await editExercise(
+        currentExercise._id,
+        exerciseData
+      );
 
       // updating current exercise
       setCurrentExercise(prev => {
         if (prev == null) return null;
         return { 
           ...prev,
-          name: name,
-          description: description,
+          name: savedExercise.name,
+          description: savedExercise.description,
         }
       });
 

@@ -9,13 +9,13 @@ export type AuthType = {
   accessToken: string
 }
 
-export type RegisterUserType = {
+export type RegisterUserBody = {
   name: string,
   email: string,
   password: string
 }
 
-export type LoginUserType = {
+export type LoginUserBody = {
   email: string,
   password: string
 }
