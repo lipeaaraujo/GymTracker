@@ -6,16 +6,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import useSession from '../../hooks/useSession';
-import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import InputAdornment from '@mui/material/InputAdornment';
 import { toast } from 'react-toastify';
+import useSetService from '../../api/set.service';
 
 const MAX_REPS = 1000
 const MAX_WEIGHT = 10000
 const INT_REGEX = /^-?[0-9]+$/;
 const FLOAT_REGEX = /^[-]?\d+(\.\d+)?$/
-
-const SET_URL = "/set";
 
 interface NewSetDialogProps {
   open: boolean,
@@ -23,6 +21,8 @@ interface NewSetDialogProps {
 }
 
 const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
+  const { createSet } = useSetService();
+
   const [formData, setFormData] = useState({
     reps: "",
     weight: ""
@@ -36,8 +36,6 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
   const [submitting, setSubmitting] = useState(false);
 
   const { curSession, setCurSession } = useSession();
-
-  const axiosPrivate = useAxiosPrivate();
   
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -51,25 +49,25 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
     try {
       if (!curSession) return;
       setSubmitting(true);
-      const response = await axiosPrivate.post(
-        SET_URL,
-        JSON.stringify({
-          session: curSession._id,
-          numReps: repsValue,
-          weight: weightValue,
-        })
-      );
+
+      const createdSet = await createSet({
+        session: curSession._id,
+        numReps: repsValue,
+        weight: weightValue
+      });
 
       // updating session
       setCurSession((prev) => {
         if (!prev) return null;
-        if (!prev.numSets) return null;
-        if (!prev.biggestLoad) return null
+        const newNumSets = prev.numSets ? prev.numSets+1 : 1;
+        const newBiggestLoad = 
+          (prev.biggestLoad && prev.biggestLoad > createdSet.weight) ?
+          prev.biggestLoad : createdSet.weight;
         return {
         ...prev,
-          numSets: prev.numSets+1,
-          biggestLoad: weightValue > prev.biggestLoad ? weightValue : prev.biggestLoad,
-          sets: [...prev.sets, response?.data]
+          numSets: newNumSets,
+          biggestLoad: newBiggestLoad,
+          sets: [...prev.sets, createdSet]
         }
       });
 
