@@ -12,10 +12,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import CardContent from '@mui/material/CardContent';
-import Chip from '@mui/material/Chip';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import Divider from '@mui/material/Divider';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
 import { toast } from "react-toastify";
@@ -24,11 +20,10 @@ import SetItem from "../../components/sets/SetItem";
 import EditDeleteActions from "../../components/EditDeleteActions";
 import EditSessionDialog from "../../components/session/EditSessionDialog";
 import DeleteSessionDialog from "../../components/session/DeleteSessionDialog";
-import Button from '@mui/material/Button';
-import ListItem from '@mui/material/ListItem';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import NewSetDialog from "../../components/sets/NewSetDialog";
 import useSessionService from "../../api/session.service";
+import ListAddButton from "../../components/ListAddButton";
+import SessionCardDetails from "../../components/session/SessionCardDetails";
 
 const ViewSession = () => {
   const { id } = useParams();
@@ -44,8 +39,6 @@ const ViewSession = () => {
   const [editModal , setEditModal] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [newSetDialog, setNewSetDialog] = useState(false);
-
-  const [addingSet, setAddingSet] = useState(false);
 
   // fetches session data
   useEffect(() => {
@@ -140,37 +133,12 @@ const ViewSession = () => {
           }
         />
         <CardContent>
-          <Stack direction='row'>
-            <Chip
-              icon={ <FitnessCenterIcon /> }
-              label={ `Exercise: ${currentExercise?.name}` }
-              color="default"
-              onClick={() => {}} // just a cool click effect
-            />
-          </Stack>
-          <Stack direction='row' sx={{ marginTop: 1 }}>
-            <Chip
-              icon={ <CalendarMonthOutlinedIcon /> }
-              label={ `Session Date: ${formattedDate}` }
-              color="default"
-              onClick={() => {}} // just a cool click effect
-            />
-          </Stack>
-          <Divider sx={{ mt: 2, mb: 2 }} />
-          <Stack direction='row' gap={1}>
-            <Chip
-              icon={ <FitnessCenterIcon /> }
-              label={ `N° Sets: ${curSession.numSets}` }
-              color="default"
-              onClick={() => {}} // just a cool click effect
-            />
-            <Chip 
-              icon={ <EmojiEventsIcon /> }
-              label={ `Biggest load: ${curSession.biggestLoad} kg` }
-              color="primary"
-              onClick={() => {}} // just a cool click effect
-            />
-          </Stack>
+          <SessionCardDetails 
+            exerciseName={currentExercise?.name}
+            sessionDate={formattedDate}
+            biggestLoad={curSession.biggestLoad}
+            numOfSets={curSession.numSets}
+          />
         </CardContent>
         <List
           subheader={
@@ -186,26 +154,15 @@ const ViewSession = () => {
               weight={set.weight}
             />
           ))}
-          <ListItem key="add-button" alignItems="center" sx={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              onClick={() => setNewSetDialog(true)}
-              variant="outlined"
-              sx={{
-                gap: 1
-              }}
-            >
-            <AddTwoToneIcon />
-              ADD SET
-            </Button>
-          </ListItem>
+          <ListAddButton 
+            onClick={() => setNewSetDialog(true)}
+            text="ADD SET"
+          />
         </List>
-        
       </Card>
     )}
     </>
   );
 };
-
-
 
 export default ViewSession;
