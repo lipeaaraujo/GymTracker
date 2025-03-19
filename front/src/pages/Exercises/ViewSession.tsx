@@ -24,6 +24,8 @@ import NewSetDialog from "../../components/sets/NewSetDialog";
 import useSessionService from "../../api/session.service";
 import ListAddButton from "../../components/ListAddButton";
 import SessionCardDetails from "../../components/session/SessionCardDetails";
+import EditSetDialog from "../../components/sets/EditSetDialog";
+import { Set } from "../../types/set.types";
 
 const ViewSession = () => {
   const { id } = useParams();
@@ -39,6 +41,10 @@ const ViewSession = () => {
   const [editModal , setEditModal] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [newSetDialog, setNewSetDialog] = useState(false);
+  const [editSetDialog, setEditSetDialog] = useState(false);
+  const [deleteSetDialog, setDeleteSetDialog] = useState(false);
+
+  const [selectedSet, setSelectedSet] = useState<Set>()
 
   // fetches session data
   useEffect(() => {
@@ -78,6 +84,16 @@ const ViewSession = () => {
     updateDate();
   }, [curSession, setCurSession]);
 
+  const editSetAction = (set: Set) => {
+    setSelectedSet(set);
+    setEditSetDialog(true);
+  }
+
+  const deleteSetAction = (set: Set) => {
+    setSelectedSet(set);
+    setDeleteSetDialog(true);
+  }
+
   return (
     <>
     <EditSessionDialog 
@@ -92,6 +108,13 @@ const ViewSession = () => {
       open={newSetDialog}
       onClose={() => setNewSetDialog(false)}
     />
+    { selectedSet &&
+      <EditSetDialog
+        open={editSetDialog}
+        onClose={() => setEditSetDialog(false)}
+        set={selectedSet}
+      />
+    }
     {!curSession ? (
       <Card>
         <CardHeader
@@ -152,6 +175,8 @@ const ViewSession = () => {
               key={i}
               numReps={set.numReps}
               weight={set.weight}
+              editAction={() => editSetAction(set)}
+              deleteAction={() => deleteSetAction(set)}
             />
           ))}
           <ListAddButton 

@@ -8,16 +8,20 @@ import EditDeleteActions from '../EditDeleteActions';
 interface SetItemProps {
   weight: number,
   numReps: number,
+  editAction: () => void,
+  deleteAction: () => void
 }
 
-const SetItem = ({ weight, numReps }: SetItemProps) => {
+const SetItem = ({
+  weight, numReps, editAction, deleteAction 
+}: SetItemProps) => {
   return (
     <ListItem
       disablePadding
       secondaryAction={
         <EditDeleteActions 
-          editAction={() => {}}
-          deleteAction={() => {}}
+          editAction={editAction}
+          deleteAction={deleteAction}
         />
       }
     >
