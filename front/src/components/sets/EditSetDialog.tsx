@@ -1,20 +1,27 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useEffect, useState } from 'react';
-import useSession from '../../hooks/useSession';
+import { Set } from "../../types/set.types";
+import { useEffect, useState } from "react";
+import useSession from "../../hooks/useSession";
+import useSetService from "../../api/set.service";
+import SetForm from "./SetForm";
+import { validateReps, validateWeight } from "../../utils/setValidators";
 import { toast } from 'react-toastify';
-import useSetService from '../../api/set.service';
-import { validateReps, validateWeight } from '../../utils/setValidators';
-import SetForm from './SetForm';
+import useSessionService from '../../api/session.service';
+import { Session } from '../../types/session.types';
 
-interface NewSetDialogProps {
+interface EditSetDialogProps {
   open: boolean,
-  onClose: () => void
+  onClose: () => void,
+  set: Set
 }
 
-const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
-  const { createSet } = useSetService();
+const EditSetDialog = ({
+  open, onClose, set
+}: EditSetDialogProps) => {
+  const { editSet } = useSetService();
+  const { getSessionAndSets } = useSessionService();
 
   const [formData, setFormData] = useState({
     reps: "",
@@ -29,7 +36,14 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
   const [submitting, setSubmitting] = useState(false);
 
   const { curSession, setCurSession } = useSession();
-  
+
+  useEffect(() => {
+    setFormData({
+      reps: set.numReps.toString(),
+      weight: set.weight.toString()
+    })
+  }, [set])
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
@@ -43,26 +57,18 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
       if (!curSession) return;
       setSubmitting(true);
 
-      const createdSet = await createSet({
+      await editSet(set._id, {
         session: curSession._id,
         numReps: repsValue,
         weight: weightValue
       });
 
+      const updatedSession: Session = await getSessionAndSets(
+        curSession._id
+      ) 
+
       // updating session
-      setCurSession((prev) => {
-        if (!prev) return null;
-        const newNumSets = prev.numSets ? prev.numSets+1 : 1;
-        const newBiggestLoad = 
-          (prev.biggestLoad && prev.biggestLoad > createdSet.weight) ?
-          prev.biggestLoad : createdSet.weight;
-        return {
-        ...prev,
-          numSets: newNumSets,
-          biggestLoad: newBiggestLoad,
-          sets: [...prev.sets, createdSet]
-        }
-      });
+      setCurSession(updatedSession);
 
       // clearing form
       setFormData({
@@ -70,15 +76,16 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
         weight: ""
       });
 
-      toast.success("Set successfully created");
+      toast.success("Set successfully saved");
     } catch (err) {
       console.error(err);
-      toast.error("Error creating set. Try again later")
+      toast.error("Error saving set. Try again later")
     } finally {
       setSubmitting(false);
       onClose();
     }
-  };
+    
+  }
 
   const handleChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
@@ -106,6 +113,7 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
     const valid = Object.values(formErrors).every((error) => error === "");
     setFormValid(valid);
   }, [formErrors, formData]);
+  
 
   return (
     <Dialog
@@ -128,4 +136,4 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
   )
 }
 
-export default NewSetDialog;
+export default EditSetDialog;
