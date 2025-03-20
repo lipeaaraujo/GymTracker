@@ -52,6 +52,8 @@ const ViewSession = () => {
     let isMounted = true;
     const controller = new AbortController();
 
+    console.log(currentExercise);
+
     const fetchSessionAndSets = async () => {
       try {
         if (!id) return;
