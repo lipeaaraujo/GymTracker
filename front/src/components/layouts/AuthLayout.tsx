@@ -22,7 +22,6 @@ const AuthLayout = () => {
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        overflowY: "scroll"
       }}
     >
       <AppBar position="static">

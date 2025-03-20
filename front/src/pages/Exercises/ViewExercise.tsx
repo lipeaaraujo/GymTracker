@@ -82,7 +82,7 @@ const ViewExercise = () => {
         <Card 
           variant="elevation" 
           sx={{
-            overflowY: 'scroll'
+            overflowY: 'auto'
           }}
         >
           <CardHeader

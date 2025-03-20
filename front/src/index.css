@@ -32,39 +32,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-input {
-  @apply bg-zinc-700 p-1.5 rounded-lg
-}
-
-textarea {
-  @apply bg-zinc-700 p-1.5 rounded-lg resize-none 
-}
-
-button {
-  @apply p-2 bg-zinc-700 rounded-xl hover:bg-zinc-600
-}
-
-button:disabled {
-  @apply text-zinc-500 bg-zinc-700
-}
-
-::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	border-radius: 10px;
-	background-color: #282828;
-}
-
-::-webkit-scrollbar {
-	width: 12px;
-	background-color: #282828;
-}
-
-::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	background-color: #646464;
-}
-
-.error {
-  @apply w-fit bg-red-800 p-1 rounded-lg
-}

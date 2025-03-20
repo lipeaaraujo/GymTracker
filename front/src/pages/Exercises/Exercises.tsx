@@ -40,7 +40,7 @@ function Exercises() {
         onClose={() => setExerciseModal(false)}
         setExercises={setExercises}
       />
-      <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", flex: 1, overflowY: 'auto' }}>
         <List
           subheader={
             <ListSubheader component="div">

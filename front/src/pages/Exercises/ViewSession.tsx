@@ -141,7 +141,7 @@ const ViewSession = () => {
     ) : (
       <Card
         sx={{
-          overflowY: 'scroll',
+          overflowY: 'auto',
         }}
       >
         <CardHeader
