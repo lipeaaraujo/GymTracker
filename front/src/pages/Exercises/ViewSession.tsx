@@ -26,6 +26,7 @@ import ListAddButton from "../../components/ListAddButton";
 import SessionCardDetails from "../../components/session/SessionCardDetails";
 import EditSetDialog from "../../components/sets/EditSetDialog";
 import { Set } from "../../types/set.types";
+import DeleteSetDialog from "../../components/sets/DeleteSetDialog";
 
 const ViewSession = () => {
   const { id } = useParams();
@@ -113,6 +114,13 @@ const ViewSession = () => {
         open={editSetDialog}
         onClose={() => setEditSetDialog(false)}
         set={selectedSet}
+      />
+    }
+    { selectedSet && 
+      <DeleteSetDialog 
+        open={deleteSetDialog}
+        onClose={() => setDeleteSetDialog(false)}
+        setId={selectedSet._id}
       />
     }
     {!curSession ? (
