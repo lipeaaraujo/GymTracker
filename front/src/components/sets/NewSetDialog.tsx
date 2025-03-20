@@ -1,11 +1,10 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useSession from '../../hooks/useSession';
 import { toast } from 'react-toastify';
 import useSetService from '../../api/set.service';
-import { validateReps, validateWeight } from '../../utils/setValidators';
 import SetForm from './SetForm';
 
 interface NewSetDialogProps {
@@ -25,7 +24,6 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
     weight: ""
   })
 
-  const [formValid, setFormValid] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const { curSession, setCurSession } = useSession();
@@ -80,33 +78,6 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
     }
   };
 
-  const handleChange = (field: string, value: string) => {
-    setFormData({ ...formData, [field]: value });
-  }
-
-  useEffect(() => {
-    // early return if reps is null or undefined.
-    if (!formData.reps) return;
-    const errorMessage = validateReps(formData.reps);
-    setFormErrors(prev => ({ ...prev, reps: errorMessage }));
-  }, [formData.reps]);
-
-  useEffect(() => {
-    // early return if weight is null
-    if (!formData.weight) return;
-    const errorMessage = validateWeight(formData.weight);
-    setFormErrors(prev => ({ ...prev, weight: errorMessage }));
-  }, [formData.weight]);
-
-  useEffect(() => {
-    if (!formData.reps || !formData.weight) {
-      setFormValid(false);
-      return;
-    } 
-    const valid = Object.values(formErrors).every((error) => error === "");
-    setFormValid(valid);
-  }, [formErrors, formData]);
-
   return (
     <Dialog
       open={open}
@@ -116,9 +87,9 @@ const NewSetDialog = ({ open, onClose }: NewSetDialogProps) => {
       <DialogContent>
         <SetForm 
           formData={formData}
+          setFormData={setFormData}
           formErrors={formErrors}
-          formValid={formValid}
-          handleChange={handleChange}
+          setFormErrors={setFormErrors}
           handleSubmit={handleSubmit}
           onClose={onClose}
           submitting={submitting}
