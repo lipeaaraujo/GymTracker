@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
 import useExercise from "../../hooks/useExercise";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 import { toast } from "react-toastify";
 import useExerciseService from "../../api/exercise.service";
-import { Exercise, ExerciseBody } from "../../types/exercise.types";
-
-const NAME_REGEX = /^\S+(?: \S+)*$/;
-const DESCRIPTION_REGEX = /^\S+(?: \S+)*$/;
+import { Exercise } from "../../types/exercise.types";
+import ExerciseForm, { ExerciseFormFields } from "./ExerciseForm";
 
 interface EditExerciseDialogProps {
   open: boolean,
@@ -23,34 +18,29 @@ const EditExerciseDialog = ({ open, onClose }: EditExerciseDialogProps) => {
   const [submitting, setSubmitting] = useState(false);
   const { currentExercise, setCurrentExercise } = useExercise();
 
-  const [name, setName] = useState("");
-  const [validName, setValidName] = useState(false);
+  const [formData, setFormData] = useState<ExerciseFormFields>({
+    name: "",
+    description: ""
+  });
+  const [formErrors, setFormErrors] = useState<ExerciseFormFields>({
+    name: "",
+    description: ""
+  });
 
-  const [description, setDescription] = useState("");
-  const [validDesc, setValidDesc] = useState(false);
-  
+  // update form fields with the info from exercise to be edited
   useEffect(() => {
-    setName(currentExercise?.name || "");
-    setDescription(currentExercise?.description || "");
+    if (!currentExercise) return;
+    setFormData({
+      name: currentExercise.name,
+      description: currentExercise.description
+    })
   }, [currentExercise]);
-
-  useEffect(() => {
-    setValidName(NAME_REGEX.test(name));
-  }, [name]);
-
-  useEffect(() => {
-    if (description) {
-      setValidDesc(DESCRIPTION_REGEX.test(description))
-    } else {
-      setValidDesc(true)
-    }
-  }, [description]);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     // prevent bypass of required fields
-    if (!name) {
+    if (!formData.name) {
       return;
     }
 
@@ -58,15 +48,13 @@ const EditExerciseDialog = ({ open, onClose }: EditExerciseDialogProps) => {
       if (currentExercise == null) return;
       setSubmitting(true);
 
-      const exerciseData: ExerciseBody = {
-        user: currentExercise.user,
-        name,
-        description
-      }
-
       const savedExercise: Exercise = await editExercise(
         currentExercise._id,
-        exerciseData
+        {
+          user: currentExercise.user,
+          name: formData.name,
+          description: formData.description
+        }
       );
 
       // updating current exercise
@@ -79,8 +67,10 @@ const EditExerciseDialog = ({ open, onClose }: EditExerciseDialogProps) => {
         }
       });
 
-      setName("");
-      setDescription("");
+      setFormData({
+        name: "",
+        description: ""
+      })
       toast.success("Exercise successfully saved");
     } catch (err) {
       console.error(err);
@@ -93,83 +83,20 @@ const EditExerciseDialog = ({ open, onClose }: EditExerciseDialogProps) => {
 
   return (
     <Dialog
-      component="form"
       open={open}
       onClose={onClose}
-      onSubmit={handleSubmit}
     >
       <DialogTitle>Edit Exercise</DialogTitle>
-      <DialogContent
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-        }}
-        dividers
-      >
-        <TextField 
-          sx={{
-            textWrap: "wrap",
-            marginTop: 1
-          }}
-          label="Name"
-          variant="outlined"
-          autoComplete="off"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          error={!validName && name ? true : false}
-          helperText={
-            !validName && name ?
-            "Must contain only valid characters. "
-            : ""
-          }
-          required
+      <DialogContent>
+        <ExerciseForm 
+          formData={formData}
+          setFormData={setFormData}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
+          handleSubmit={handleSubmit}
+          onClose={onClose}
+          submitting={submitting}
         />
-        <TextField 
-          sx={{
-            textWrap: "wrap",
-          }}
-          label="Description"
-          variant="outlined"
-          autoComplete="off"
-          type="text"
-          multiline
-          maxRows={12}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          error={!validDesc && description ? true : false}
-          helperText={
-            !validDesc && description ?
-            "Must contain only valid characters. "
-            : ""
-          }
-        />
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            gap: 1,
-          }}
-        >
-          <Button 
-            variant="contained" 
-            type="submit" 
-            sx={{ width: "100%" }}
-            disabled={!validDesc || !validName}
-            loading={submitting}
-          >
-            Confirm
-          </Button>
-          <Button 
-            variant="text" 
-            type="button" 
-            sx={{ width: "100%" }}
-            onClick={onClose}  
-          >
-            Cancel
-          </Button>
-        </Box>
       </DialogContent>
     </Dialog>
   );
