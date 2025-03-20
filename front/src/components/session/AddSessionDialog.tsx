@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useExercise from "../../hooks/useExercise";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { toast } from "react-toastify";
-import { Dayjs } from "dayjs";
 import { Session, SessionBody } from "../../types/session.types";
-import { dayjs2DateStr } from "../../utils/dateUtils";
 import useSessionService from "../../api/session.service";
+import SessionForm, { SessionFormFields } from "./SessionForm";
 
 interface AddSessionDialogProps {
   open: boolean,
@@ -23,28 +18,25 @@ const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
   const { createSession } = useSessionService();
   const [submitting, setSubmitting] = useState(false);
 
-  const [date, setDate] = useState<Dayjs | null>(null);
-  const [validDate, setValidDate] = useState(false);
-
-  useEffect(() => {
-    const result = date ? true : false;
-    // date && console.log(date, dayjs2DateStr(date));
-    setValidDate(result);
-  }, [date]);
+  const [formData, setFormData] = useState<SessionFormFields>({
+    date: ""
+  });
+  const [formErrors, setFormErrors] = useState<SessionFormFields>({
+    date: ""
+  });
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     // prevent bypass of required fields
-    if (!date) return;
+    if (!formData.date) return;
 
     try {
       if (currentExercise == null) return;
       setSubmitting(true);
-      const dateString = dayjs2DateStr(date);
       const sessionData: SessionBody = {
         exercise: currentExercise._id,
-        date: dateString
+        date: formData.date
       }
 
       const createdSession: Session = await createSession(sessionData);
@@ -61,7 +53,10 @@ const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
         };
       });
 
-      setDate(null);
+      setFormData({
+        date: ""
+      });
+
       toast.success("Session successfully created");
     } catch (err) {
       console.error(err);
@@ -74,55 +69,20 @@ const AddSessionDialog = ({ open, onClose }: AddSessionDialogProps) => {
 
   return (
     <Dialog
-      component="form"
       onClose={onClose}
       open={open}
-      onSubmit={handleSubmit}
     >
       <DialogTitle>Add Session</DialogTitle>
-      <DialogContent
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-        }}
-        dividers
-      >
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            sx={{
-              marginTop: 1
-            }}
-            label="Session Date"
-            value={date}
-            onChange={(newDate) => setDate(newDate)}
-          />
-        </LocalizationProvider>
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            gap: 1,
-          }}
-        >
-          <Button 
-            variant="contained" 
-            type="submit" 
-            sx={{ width: "100%" }}
-            disabled={!validDate}
-            loading={submitting}
-          >
-            Confirm
-          </Button>
-          <Button 
-            variant="text" 
-            type="button" 
-            sx={{ width: "100%" }}
-            onClick={onClose}  
-          >
-            Cancel
-          </Button>
-        </Box>
+      <DialogContent>
+        <SessionForm 
+          formData={formData}
+          formErrors={formErrors}
+          handleSubmit={handleSubmit}
+          onClose={onClose}
+          setFormData={setFormData}
+          setFormErrors={setFormErrors}
+          submitting={submitting}
+        />
       </DialogContent>
     </Dialog>
   );
